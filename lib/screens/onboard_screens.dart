@@ -1,12 +1,33 @@
 import 'package:crypto_exchange/components/app_text.dart';
 import 'package:crypto_exchange/components/app_text_style.dart';
+import 'package:crypto_exchange/components/onboarding_page.dart';
 import 'package:crypto_exchange/constants/app_colors_path.dart';
-import 'package:crypto_exchange/constants/app_icons_path.dart';
 import 'package:crypto_exchange/constants/app_images_path.dart';
+import 'package:crypto_exchange/screens/demo_stream.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class OnboardScreens extends StatelessWidget {
+
+class OnboardScreens extends StatefulWidget {
   const OnboardScreens({super.key});
+
+  @override
+  State<OnboardScreens> createState() => _OnboardScreensState();
+}
+
+class _OnboardScreensState extends State<OnboardScreens> {
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController.addListener(() {
+      setState(() {
+        _currentPage = _pageController.page!.round();
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,100 +37,88 @@ class OnboardScreens extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
+            SizedBox(height: 20,),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset(
-                  alignment: Alignment.center,
-                  AppImagePaths.logo,
-                  width: size.width,
-                ),
+                Image.asset(AppImagePaths.logo)
               ],
             ),
-            Center(
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  SizedBox(
-                    width: 350,
-                    height: 350,
-                    child: Center(
-                      child: Image.asset(
-                        AppImagePaths.img_market_analysis,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
+            Expanded(
+              child: PageView(
+                controller: _pageController,
+                children: const [
+                  OnboardingPage(
+                    imagePath: 'assets/images/market_analysis.png',
+                    title: 'Take hold of your finances',
+                    description:
+                    'Lorem ipsum dolor sit amet, consectetur \n adipiscing elit. Ut eget mauris massa pharetra.',
                   ),
-                  // Icon Ethereum
-                  Positioned(
-                    top: -10,
-                    left: 155,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 22,
-                      child: Image.asset(AppIconsPath.iconsBTC),
-                    ),
+                  OnboardingPage(
+                    imagePath: 'assets/images/mobile _financial_analytics.png',
+                    title: 'Smart trading tools',
+                    description:
+                    'Lorem ipsum dolor sit amet, consectetur \n adipiscing elit. Ut eget mauris massa pharetra.',
                   ),
-                  // Icon Bitcoin
-                  Positioned(
-                    left: -10,
-                    top: 100,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 22,
-                      child: Image.asset(AppIconsPath.iconsETH),
-                    ),
-                  ),
-                  // Icon Stable coin
-                  Positioned(
-                    right: -10,
-                    top: 100,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 22,
-                      child: Image.asset(AppIconsPath.iconsSLA),
-                    ),
+                  OnboardingPage(
+                    imagePath: 'assets/images/blockchain_development.png',
+                    title: 'Invest in the future',
+                    description:
+                    'Lorem ipsum dolor sit amet, consectetur \n adipiscing elit. Ut eget mauris massa pharetra.',
                   ),
                 ],
               ),
             ),
-            Column(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 56),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: AppText(content: "Take hold of your\nfinances"),
-                ),
-                const SizedBox(height: 18),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                  child: Text(
-                    "Lorem ipsum dolor sit amet, consectetur \n adipiscing elit. Ut eget mauris massa pharetra.",
-                    style: AppTextStyle.text14Regular,
-                    textAlign: TextAlign.center,
+              children: List.generate(3, (index) {
+                return AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  height: 5,
+                  width: _currentPage == index ? 30 : 10,
+                  margin: const EdgeInsets.symmetric(horizontal: 5),
+                  decoration: BoxDecoration(
+                    color: _currentPage == index
+                        ? AppColorsPath.blue
+                        : AppColorsPath.grey,
+                    borderRadius: BorderRadius.circular(5),
                   ),
-                ),
-              ],
+                );
+              }),
             ),
-            SizedBox(height: 50),
-            Container(
-              width: size.width - 16 * 2,
-              padding: EdgeInsets.symmetric(vertical: 15),
-              decoration: BoxDecoration(
+            const SizedBox(height: 30),
+            GestureDetector(
+              onTap: () async {
+                if (_currentPage < 2) {
+                  _pageController.nextPage(
+                    duration: const Duration(milliseconds: 500),
+                    curve: Curves.ease,
+                  );
+                } else {
+                  SharedPreferences prefs =
+                  await SharedPreferences.getInstance();
+                  await prefs.setBool('onboarding_completed', true);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const DemoHomeScreen()),
+                  );
+                }
+              },
+              child: Container(
+                width: size.width - 16 * 2,
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                decoration: BoxDecoration(
                   color: AppColorsPath.blue,
-              borderRadius: BorderRadius.circular(12),
-              ),
-              child: AppText(
-                content: "Next",
-                style: TextStyle(
-                  fontFamily: 'Readex Pro',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: AppColorsPath.white,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: AppText(
+                  content: "Next",
+                  style: AppTextStyle.text16Medium,
                 ),
               ),
             ),
+            const SizedBox(height: 50),
           ],
         ),
       ),
