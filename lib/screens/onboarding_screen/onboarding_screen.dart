@@ -1,20 +1,21 @@
 import 'package:crypto_exchange/components/app_text.dart';
 import 'package:crypto_exchange/components/app_text_style.dart';
-import 'package:crypto_exchange/components/onboarding_page.dart';
-import 'package:crypto_exchange/constants/app_colors_path.dart';
-import 'package:crypto_exchange/constants/app_images_path.dart';
-import 'package:crypto_exchange/screens/demo_stream.dart';
+import 'package:crypto_exchange/screens/home_screen/home_screen.dart';
+import 'package:crypto_exchange/screens/onboarding_screen/widgets/onboarding_body_widget.dart';
+import 'package:crypto_exchange/core/constants/app_colors_path.dart';
+import 'package:crypto_exchange/core/constants/app_images_path.dart';
+import 'package:crypto_exchange/core/extensions/context_extension.dart';
+import 'package:crypto_exchange/services/storage_service.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class OnboardScreens extends StatefulWidget {
-  const OnboardScreens({super.key});
+class OnboardingScreen extends StatefulWidget {
+  const OnboardingScreen({super.key});
 
   @override
-  State<OnboardScreens> createState() => _OnboardScreensState();
+  State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardScreensState extends State<OnboardScreens> {
+class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
 
@@ -23,14 +24,15 @@ class _OnboardScreensState extends State<OnboardScreens> {
     super.initState();
     _pageController.addListener(() {
       setState(() {
-        _currentPage = _pageController.page!.round();
+        if (_pageController.page != null) {
+          _currentPage = _pageController.page!.round();
+        }
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: AppColorsPath.lightWhite,
       body: SafeArea(
@@ -45,19 +47,19 @@ class _OnboardScreensState extends State<OnboardScreens> {
               child: PageView(
                 controller: _pageController,
                 children: const [
-                  OnboardingPage(
+                  OnboardingBodyWidget(
                     imagePath: 'assets/images/market_analysis.png',
                     title: 'Take hold of your finances',
                     description:
                         'Lorem ipsum dolor sit amet, consectetur \n adipiscing elit. Ut eget mauris massa pharetra.',
                   ),
-                  OnboardingPage(
+                  OnboardingBodyWidget(
                     imagePath: 'assets/images/mobile _financial_analytics.png',
                     title: 'Smart trading tools',
                     description:
                         'Lorem ipsum dolor sit amet, consectetur \n adipiscing elit. Ut eget mauris massa pharetra.',
                   ),
-                  OnboardingPage(
+                  OnboardingBodyWidget(
                     imagePath: 'assets/images/blockchain_development.png',
                     title: 'Invest in the future',
                     description:
@@ -85,6 +87,8 @@ class _OnboardScreensState extends State<OnboardScreens> {
               }),
             ),
             const SizedBox(height: 30),
+
+            /// TODO: Implement App Button component
             GestureDetector(
               onTap: () async {
                 if (_currentPage < 2) {
@@ -93,19 +97,19 @@ class _OnboardScreensState extends State<OnboardScreens> {
                     curve: Curves.ease,
                   );
                 } else {
-                  SharedPreferences prefs =
-                      await SharedPreferences.getInstance();
-                  await prefs.setBool('onboarding_completed', true);
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const DemoHomeScreen(),
-                    ),
-                  );
+                  await StorageService.instance.setOnboardingCompleted(true);
+                  if (context.mounted) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomeScreen(),
+                      ),
+                    );
+                  }
                 }
               },
               child: Container(
-                width: size.width - 16 * 2,
+                width: context.screenWidth - 16 * 2,
                 padding: const EdgeInsets.symmetric(vertical: 15),
                 decoration: BoxDecoration(
                   color: AppColorsPath.blue,

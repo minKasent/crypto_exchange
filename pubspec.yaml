@@ -43,8 +43,9 @@ dependencies:
 
   # State Managment
   provider: ^6.1.2
+
   # Shared Preferences
-  shared_preferences: ^2.5.3
+  shared_preferences: ^2.3.5
 
 dev_dependencies:
   flutter_test:

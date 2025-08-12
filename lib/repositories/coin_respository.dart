@@ -1,15 +1,22 @@
 import 'package:crypto_exchange/models/coin.dart';
-import 'package:crypto_exchange/services/coin_websocket_service.dart';
+import 'package:crypto_exchange/services/binance_websocket_service.dart';
 
 class CoinRespository {
-  final CoinWebsocketService _coinWebsocketService = CoinWebsocketService();
+  final BinanceWebsocketService _coinWebsocketService;
+
+  CoinRespository(this._coinWebsocketService);
 
   // Stream of coin data updates
   Stream<Map<String, Coin>> get coinStream => _coinWebsocketService.coinStream;
 
   // Initilize websocket connection
-  Future<void> init() async {
-    await _coinWebsocketService.connect();
+  Future<void> init({required List<String> coins}) async {
+    await _coinWebsocketService.connectToTickers(coins: coins);
+  }
+
+  /// Get coins list
+  List<Coin> getCoinsList() {
+    return _coinWebsocketService.currentCoins.values.toList();
   }
 
   // Dispose websocket connection

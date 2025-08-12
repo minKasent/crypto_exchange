@@ -1,15 +1,15 @@
 import 'package:crypto_exchange/components/app_text.dart';
 import 'package:crypto_exchange/components/app_text_style.dart';
-import 'package:crypto_exchange/constants/app_icons_path.dart';
+import 'package:crypto_exchange/core/constants/app_icons_path.dart';
+import 'package:crypto_exchange/core/extensions/context_extension.dart';
 import 'package:flutter/material.dart';
 
-
-class OnboardingPage extends StatelessWidget {
+class OnboardingBodyWidget extends StatelessWidget {
   final String imagePath;
   final String title;
   final String description;
 
-  const OnboardingPage({
+  const OnboardingBodyWidget({
     super.key,
     required this.imagePath,
     required this.title,
@@ -26,13 +26,10 @@ class OnboardingPage extends StatelessWidget {
             clipBehavior: Clip.none,
             children: [
               SizedBox(
-                width: 350,
-                height: 350,
+                width: context.screenWidth - 28,
+                height: context.screenWidth - 28,
                 child: Center(
-                  child: Image.asset(
-                    imagePath,
-                    fit: BoxFit.contain,
-                  ),
+                  child: Image.asset(imagePath, fit: BoxFit.contain),
                 ),
               ),
               // Icon Ethereum

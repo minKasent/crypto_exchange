@@ -1,20 +1,22 @@
 import 'dart:async';
 
+import 'package:crypto_exchange/core/constants/app_data.dart';
 import 'package:crypto_exchange/models/coin.dart';
 import 'package:crypto_exchange/repositories/coin_respository.dart';
 import 'package:flutter/material.dart';
 
-class CoinProvider with ChangeNotifier {
-  final CoinRespository _coinRespository = CoinRespository();
-  // StreamSubscription<Map<String, Coin>>? _coinStreamSubscription;
+class HomeProvider with ChangeNotifier {
+  HomeProvider(this._coinRespository) {
+    init();
+  }
+
+  final CoinRespository _coinRespository;
 
   bool _isLoading = false;
   bool get isLoaded => _isLoading;
 
   String? _error;
   String? get error => _error;
-
-  Map<String, Coin> _coins = {};
   List<Coin> _listOfCoins = [];
   List<Coin> get listOfCoins => _listOfCoins;
 
@@ -22,38 +24,12 @@ class CoinProvider with ChangeNotifier {
   Future<void> init() async {
     try {
       _setLoading(true);
-      await _coinRespository.init();
+      await _coinRespository.init(coins: AppData.coins);
 
       /// listen to stream data
       _coinRespository.coinStream.listen(
         (message) {
-          _coins = message;
-
-          /// Convert from Map<String, Coin> _coins to List<Coin> _listOfCoins from each Coin in map by key
-          ///  and later update it element by message
-          /// First add all element into the _listOfCoins when it's empty
-          /// Later after receive new message from stream but if it message contains the same key
-          /// -> replace new one by index else add new ones
-          /// update it element by message
-
-          /// Initialize _listOfCoins if it's empty
-          if (_listOfCoins.isEmpty) {
-            _listOfCoins = _coins.values.toList();
-          } else {
-            // Update only the existing coins or add new ones
-            for (var entry in message.entries) {
-              final index = _listOfCoins.indexWhere(
-                (coin) => coin.symbol == entry.key,
-              );
-              if (index != -1) {
-                // Update existing coin
-                _listOfCoins[index] = entry.value;
-              } else {
-                // Add new coin if not found
-                _listOfCoins.add(entry.value);
-              }
-            }
-          }
+          _listOfCoins = message.values.toList();
 
           notifyListeners();
           debugPrint('_listOfCoins length: ${_listOfCoins.length}');

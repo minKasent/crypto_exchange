@@ -1,8 +1,7 @@
-
-import 'package:crypto_exchange/constants/app_colors_path.dart';
+import 'package:crypto_exchange/core/constants/app_colors_path.dart';
 import 'package:flutter/material.dart';
 
-class AppTextStyle{
+class AppTextStyle {
   static final text32SemiBold = TextStyle(
     fontFamily: 'Readex Pro',
     fontSize: 32,
@@ -17,6 +16,6 @@ class AppTextStyle{
     fontFamily: 'Readex Pro',
     fontSize: 16,
     fontWeight: FontWeight.w500,
-    color: AppColorsPath.white
+    color: AppColorsPath.white,
   );
 }
