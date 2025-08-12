@@ -7,7 +7,6 @@ import 'package:crypto_exchange/screens/demo_stream.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class OnboardScreens extends StatefulWidget {
   const OnboardScreens({super.key});
 
@@ -37,12 +36,10 @@ class _OnboardScreensState extends State<OnboardScreens> {
       body: SafeArea(
         child: Column(
           children: [
-            SizedBox(height: 20,),
+            SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(AppImagePaths.logo)
-              ],
+              children: [Image.asset(AppImagePaths.logo)],
             ),
             Expanded(
               child: PageView(
@@ -52,19 +49,19 @@ class _OnboardScreensState extends State<OnboardScreens> {
                     imagePath: 'assets/images/market_analysis.png',
                     title: 'Take hold of your finances',
                     description:
-                    'Lorem ipsum dolor sit amet, consectetur \n adipiscing elit. Ut eget mauris massa pharetra.',
+                        'Lorem ipsum dolor sit amet, consectetur \n adipiscing elit. Ut eget mauris massa pharetra.',
                   ),
                   OnboardingPage(
                     imagePath: 'assets/images/mobile _financial_analytics.png',
                     title: 'Smart trading tools',
                     description:
-                    'Lorem ipsum dolor sit amet, consectetur \n adipiscing elit. Ut eget mauris massa pharetra.',
+                        'Lorem ipsum dolor sit amet, consectetur \n adipiscing elit. Ut eget mauris massa pharetra.',
                   ),
                   OnboardingPage(
                     imagePath: 'assets/images/blockchain_development.png',
                     title: 'Invest in the future',
                     description:
-                    'Lorem ipsum dolor sit amet, consectetur \n adipiscing elit. Ut eget mauris massa pharetra.',
+                        'Lorem ipsum dolor sit amet, consectetur \n adipiscing elit. Ut eget mauris massa pharetra.',
                   ),
                 ],
               ),
@@ -78,9 +75,10 @@ class _OnboardScreensState extends State<OnboardScreens> {
                   width: _currentPage == index ? 30 : 10,
                   margin: const EdgeInsets.symmetric(horizontal: 5),
                   decoration: BoxDecoration(
-                    color: _currentPage == index
-                        ? AppColorsPath.blue
-                        : AppColorsPath.grey,
+                    color:
+                        _currentPage == index
+                            ? AppColorsPath.blue
+                            : AppColorsPath.grey,
                     borderRadius: BorderRadius.circular(5),
                   ),
                 );
@@ -96,12 +94,13 @@ class _OnboardScreensState extends State<OnboardScreens> {
                   );
                 } else {
                   SharedPreferences prefs =
-                  await SharedPreferences.getInstance();
+                      await SharedPreferences.getInstance();
                   await prefs.setBool('onboarding_completed', true);
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const DemoHomeScreen()),
+                      builder: (context) => const DemoHomeScreen(),
+                    ),
                   );
                 }
               },

@@ -1,4 +1,4 @@
-import 'package:crypto_exchange/screens/demo_stream.dart';
+import 'package:crypto_exchange/screens/home_screen.dart';
 import 'package:crypto_exchange/screens/onboard_screens.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -21,8 +21,9 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        fontFamily: 'Readex Pro',
       ),
-      home: onboardingCompleted ? const DemoHomeScreen() : const OnboardScreens(),
+      home: onboardingCompleted ? const HomeScreen() : const OnboardScreens(),
     );
   }
 }
