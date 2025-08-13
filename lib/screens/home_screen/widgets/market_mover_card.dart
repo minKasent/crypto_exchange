@@ -12,6 +12,7 @@ class MarketMoverCard extends StatelessWidget {
   final String change;
   final bool isPositive;
   final String volume;
+  final bool chartPath;
 
   const MarketMoverCard({
     required this.iconPath,
@@ -20,7 +21,9 @@ class MarketMoverCard extends StatelessWidget {
     required this.change,
     required this.isPositive,
     required this.volume,
+    required this.chartPath,
     super.key,
+
   });
 
   @override
@@ -66,7 +69,13 @@ class MarketMoverCard extends StatelessWidget {
               color: isPositive ? Colors.green : Colors.red,
             ),
           ),
-          Center(child: Image.asset(AppImagePaths.img_sharp_recovery)),
+          Center(
+            child: Image.asset(
+              chartPath
+                  ? AppImagePaths.imgSharpRecovery
+                  : AppImagePaths.imgSteadyGrowth,
+            ),
+          ),
           AppText(
             content: "24H Vol.",
             style: AppTextStyle.text14Regular.copyWith(

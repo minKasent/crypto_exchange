@@ -41,7 +41,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [Image.asset(AppImagePaths.logo)],
+              children: [Image.asset(AppImagePaths.imgLogo)],
             ),
             Expanded(
               child: PageView(
@@ -54,7 +54,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         'Lorem ipsum dolor sit amet, consectetur \n adipiscing elit. Ut eget mauris massa pharetra.',
                   ),
                   OnboardingBodyWidget(
-                    imagePath: 'assets/images/mobile _financial_analytics.png',
+                    imagePath: 'assets/images/mobile_financial_analytics.png',
                     title: 'Smart trading tools',
                     description:
                         'Lorem ipsum dolor sit amet, consectetur \n adipiscing elit. Ut eget mauris massa pharetra.',

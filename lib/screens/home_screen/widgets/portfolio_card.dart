@@ -67,7 +67,7 @@ class PortfolioCard extends StatelessWidget {
               AppText(
                 content: change,
                 style: AppTextStyle.text14Regular.copyWith(
-                  color: isPositive ? Colors.green : Colors.red,
+                  color: isPositive ? AppColorsPath.green : AppColorsPath.red,
                 ),
               ),
             ],

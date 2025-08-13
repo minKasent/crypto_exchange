@@ -5,4 +5,6 @@ class AppColorsPath {
   static Color blue = const Color(0xFF2F66F6);
   static Color white = const Color(0xFFFFFFFF);
   static Color grey = const Color(0xFF696F8C);
+  static Color green = const Color(0xFF098C26);
+  static Color red = const Color(0xFFCD0000);
 }

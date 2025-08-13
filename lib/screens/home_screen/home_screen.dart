@@ -32,12 +32,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   AppBar _buildAppBarWidget() {
     return AppBar(
-      leading: IconButton(onPressed: () {}, icon: Icon(Icons.person)),
-      title: Image.asset(AppImagePaths.logo),
+      leading: Image.asset(AppIconsPath.iconsProfile),
+      title: Image.asset(AppImagePaths.imgLogo),
       centerTitle: true,
       actions: [
-        IconButton(onPressed: () {}, icon: Icon(Icons.settings)),
-        SizedBox(width: 20),
+        IconButton(
+          onPressed: () {},
+          icon: Image.asset(AppIconsPath.iconsSetting),
+        ),
+        SizedBox(width: 10),
       ],
       backgroundColor: AppColorsPath.lightWhite,
     );
@@ -47,7 +50,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       backgroundColor: AppColorsPath.white,
-      fixedColor: Colors.yellow,
+      selectedItemColor: AppColorsPath.blue,
+      unselectedItemColor: AppColorsPath.grey,
       elevation: 10,
       currentIndex: currentIndex,
       onTap: (index) {
@@ -57,13 +61,45 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       items: [
         BottomNavigationBarItem(
-          icon: Icon(Icons.home, color: Colors.black),
-          label: "Home",
+          icon: ImageIcon(AssetImage(AppIconsPath.iconsHome)),
+          activeIcon: ImageIcon(
+            AssetImage(AppIconsPath.iconsHome),
+            color: AppColorsPath.blue,
+          ),
+          label: 'Home',
         ),
-        BottomNavigationBarItem(icon: Icon(Icons.search), label: "Trade"),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: "Market"),
-        BottomNavigationBarItem(icon: Icon(Icons.search), label: "Favorites"),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: "Wallet"),
+        BottomNavigationBarItem(
+          icon: ImageIcon(AssetImage(AppIconsPath.iconsTrade)),
+          activeIcon: ImageIcon(
+            AssetImage(AppIconsPath.iconsTrade),
+            color: AppColorsPath.blue,
+          ),
+          label: 'Trade',
+        ),
+        BottomNavigationBarItem(
+          icon: ImageIcon(AssetImage(AppIconsPath.iconsMarket)),
+          activeIcon: ImageIcon(
+            AssetImage(AppIconsPath.iconsMarket),
+            color: AppColorsPath.blue,
+          ),
+          label: 'Market',
+        ),
+        BottomNavigationBarItem(
+          icon: ImageIcon(AssetImage(AppIconsPath.iconsFavorites)),
+          activeIcon: ImageIcon(
+            AssetImage(AppIconsPath.iconsFavorites),
+            color: AppColorsPath.blue,
+          ),
+          label: 'Favorites',
+        ),
+        BottomNavigationBarItem(
+          icon: ImageIcon(AssetImage(AppIconsPath.iconsWallet)),
+          activeIcon: ImageIcon(
+            AssetImage(AppIconsPath.iconsWallet),
+            color: AppColorsPath.blue,
+          ),
+          label: 'Wallet',
+        ),
       ],
     );
   }
@@ -82,7 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     SizedBox(height: 20),
-                    Image.asset(AppImagePaths.img_portfolio_graph),
+                    Image.asset(AppImagePaths.imgPortfolioGraph),
                     // MARKET MOVERS
                     _buildSectionHeader("Market Movers"),
                     const SizedBox(height: 16),
@@ -99,6 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             change: "+2.76%",
                             isPositive: true,
                             volume: "394 897 432,26",
+                            chartPath: true,
                           ),
                           SizedBox(width: 12),
                           MarketMoverCard(
@@ -108,6 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             change: "+3.75%",
                             isPositive: true,
                             volume: "150 897 992,26",
+                            chartPath: false,
                           ),
                           SizedBox(width: 12),
                           MarketMoverCard(
@@ -117,6 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             change: "-1.25%",
                             isPositive: false,
                             volume: "280 123 456,78",
+                            chartPath: false,
                           ),
                         ],
                       ),
@@ -129,15 +168,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     Flexible(
                       fit: FlexFit.loose,
                       child: ListView.separated(
-                        separatorBuilder:
-                            (context, index) => SizedBox(height: 16),
+                        separatorBuilder: (context, index) =>
+                            SizedBox(height: 16),
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: homeProvider.listOfCoins.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
                           final item = homeProvider.listOfCoins[index];
                           return PortfolioCard(
-                            iconPath: AppIconsPath.iconsBTC,
+                            iconPath: AppIconsPath.iconsSLA,
                             name: item.symbolName,
                             symbol: "BTC",
                             value: item.price,
