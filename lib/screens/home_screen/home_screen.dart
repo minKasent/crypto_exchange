@@ -212,7 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
         AppText(
           content: title,
           style: AppTextStyle.text16Medium.copyWith(
-            color: Colors.black,
+            color: AppColorsPath.darkBlue,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),

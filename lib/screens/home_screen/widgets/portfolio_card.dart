@@ -27,7 +27,7 @@ class PortfolioCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: Colors.white,
+        color: AppColorsPath.white,
         boxShadow: [
           BoxShadow(
             color: Color(0xFF2F66F6).withValues(alpha: 0.5),
@@ -46,7 +46,7 @@ class PortfolioCard extends StatelessWidget {
             children: [
               AppText(
                 content: name,
-                style: AppTextStyle.text16Medium.copyWith(color: Colors.black),
+                style: AppTextStyle.text16Medium.copyWith(color: AppColorsPath.darkBlue),
               ),
               AppText(
                 content: symbol,
@@ -62,7 +62,7 @@ class PortfolioCard extends StatelessWidget {
             children: [
               AppText(
                 content: value,
-                style: AppTextStyle.text16Medium.copyWith(color: Colors.black),
+                style: AppTextStyle.text16Medium.copyWith(color: AppColorsPath.darkBlue),
               ),
               AppText(
                 content: change,

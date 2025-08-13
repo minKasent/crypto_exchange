@@ -47,14 +47,14 @@ class MarketMoverCard extends StatelessWidget {
                   AppText(
                     content: symbol,
                     style: AppTextStyle.text14Regular.copyWith(
-                      color: Colors.black,
+                      color: AppColorsPath.darkBlue,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   AppText(
                     content: price,
                     style: AppTextStyle.text16Medium.copyWith(
-                      color: Colors.black,
+                      color: AppColorsPath.darkBlue,
                     ),
                   ),
                 ],
@@ -66,7 +66,7 @@ class MarketMoverCard extends StatelessWidget {
           AppText(
             content: change,
             style: AppTextStyle.text14Regular.copyWith(
-              color: isPositive ? Colors.green : Colors.red,
+              color: isPositive ? AppColorsPath.green : AppColorsPath.red,
             ),
           ),
           Center(
