@@ -1,5 +1,6 @@
 import 'package:crypto_exchange/providers/home_provider.dart';
 import 'package:crypto_exchange/repositories/coin_respository.dart';
+import 'package:crypto_exchange/routes/app_routes.dart';
 import 'package:crypto_exchange/screens/home_screen/home_screen.dart';
 import 'package:crypto_exchange/screens/onboarding_screen/onboarding_screen.dart';
 import 'package:crypto_exchange/services/binance_websocket_service.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
+        routes: AppRoutes.routes,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           fontFamily: 'Readex Pro',

@@ -9,4 +9,11 @@ class AppIconsPath {
   static const String iconsFavorites = 'assets/icons/favorites.png';
   static const String iconsProfile = 'assets/icons/profile.png';
   static const String iconsSetting = 'assets/icons/setting_line_light.png';
+  static const String iconsBack = 'assets/icons/back.png';
+  static const String iconsSearch = 'assets/icons/search.png';
+  static const String iconsCopy = 'assets/icons/copy.png';
+  static const String iconsCheckVerify = 'assets/icons/check.png';
+  static const String iconsSecurity = 'assets/icons/security.png';
+
+
 }

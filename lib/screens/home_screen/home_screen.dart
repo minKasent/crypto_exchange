@@ -37,7 +37,9 @@ class _HomeScreenState extends State<HomeScreen> {
       centerTitle: true,
       actions: [
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, "/setting");
+          },
           icon: Image.asset(AppIconsPath.iconsSetting),
         ),
         SizedBox(width: 10),
@@ -117,7 +119,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    SizedBox(height: 20),
+                    Center(
+                      child: Column(
+                        children: [
+                          AppText(content: "Portfolio Balance",style: AppTextStyle.text16Medium.copyWith(color: AppColorsPath.darkBlue),),
+                          AppText(content: "\$2,760.23"),
+                          AppText(content: "+2.60%",style: AppTextStyle.text16Medium.copyWith(color: AppColorsPath.darkBlue),),
+                        ],
+                      ),
+                    ),
                     Image.asset(AppImagePaths.imgPortfolioGraph),
                     // MARKET MOVERS
                     _buildSectionHeader("Market Movers"),
