@@ -35,13 +35,12 @@ class SettingScreen extends StatelessWidget {
           ),
         ],
       ),
-
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 15, vertical: 30),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               width: context.screenWidth,
               decoration: BoxDecoration(
                 color: AppColorsPath.white,
@@ -56,11 +55,11 @@ class SettingScreen extends StatelessWidget {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Avartar
+                            // Avatar
                             CircleAvatar(
                               child: Image.asset(AppImagePaths.imgAvartar),
                             ),
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             AppText(
                               content: "Dmutro \n to***@***.com",
                               style: AppTextStyle.text14Regular.copyWith(
@@ -69,14 +68,14 @@ class SettingScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: 5),
+                        const SizedBox(height: 5),
                         Row(
                           children: [
                             AppText(
                               content: "ID 28954761",
                               style: AppTextStyle.text14Regular,
                             ),
-                            SizedBox(width: 8),
+                            const SizedBox(width: 8),
                             Image.asset(AppIconsPath.iconsCopy),
                           ],
                         ),
@@ -96,7 +95,7 @@ class SettingScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image.asset(AppIconsPath.iconsCheckVerify),
-                        SizedBox(width: 5),
+                        const SizedBox(width: 5),
                         AppText(
                           content: "Verify",
                           style: AppTextStyle.text14Regular,
@@ -107,67 +106,63 @@ class SettingScreen extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             Align(
               alignment: Alignment.centerLeft,
-              child: AppText(content: "Privacy", style: AppTextStyle.text14Regular),
+              child: AppText(
+                content: "Privacy",
+                style: AppTextStyle.text14Regular,
+              ),
             ),
-            SizedBox(height: 7,),
-            Container(
-              decoration: BoxDecoration(
-                color: AppColorsPath.white,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(14), topRight: Radius.circular(14)),
-              ),
-              padding: EdgeInsets.symmetric(vertical: 16,horizontal: 14),
-              width: context.screenWidth,
-              child: Row(
-                children: [
-                  Image.asset(AppIconsPath.iconsProfile, height: 24, width: 24),
-                  SizedBox(width: 8),
-                  AppText(
-                    content: "Profile",
-                    style: AppTextStyle.text14Regular.copyWith(
-                      fontSize: 16,
-                      color: AppColorsPath.darkBlue,
-                    ),
-                  ),
-                  Spacer(),
-                  Icon(Icons.arrow_forward_ios, color: AppColorsPath.grey),
-                ],
-              ),
-
+            const SizedBox(height: 7),
+            _buildItemWidget(
+              context,
+              icon: AppIconsPath.iconsProfile,
+              title: "Profile",
+              onTap: () {
+                /// Navigation logic
+              },
             ),
           ],
         ),
       ),
     );
-
-
-
   }
-  Container _buildItemWidgets(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColorsPath.white,
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(14), topRight: Radius.circular(14)),
-      ),
-      padding: EdgeInsets.symmetric(vertical: 16,horizontal: 14),
-      width: context.screenWidth,
-      child: Row(
-        children: [
-          Image.asset(AppIconsPath.iconsProfile, height: 24, width: 24),
-          SizedBox(width: 8),
-          AppText(
-            content: "Profile",
-            style: AppTextStyle.text14Regular.copyWith(
-              fontSize: 16,
-              color: AppColorsPath.darkBlue,
-            ),
-          ),
-          Spacer(),
-          Icon(Icons.arrow_forward_ios, color: AppColorsPath.grey),
-        ],
-      ),
 
+  GestureDetector _buildItemWidget(
+    BuildContext context, {
+    required String icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColorsPath.white,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(14),
+            topRight: Radius.circular(14),
+          ),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 14),
+        width: context.screenWidth,
+        child: Row(
+          children: [
+            Image.asset(icon, height: 24, width: 24),
+            const SizedBox(width: 8),
+            AppText(
+              content: title,
+              style: AppTextStyle.text14Regular.copyWith(
+                fontSize: 16,
+                color: AppColorsPath.darkBlue,
+              ),
+            ),
+            const Spacer(),
+            Icon(Icons.arrow_forward_ios, color: AppColorsPath.grey),
+          ],
+        ),
+      ),
     );
+  }
 }
