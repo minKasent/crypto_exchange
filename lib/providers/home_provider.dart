@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class HomeProvider with ChangeNotifier {
   HomeProvider(this._coinRespository) {
-    init();
+    // init();
   }
 
   final CoinRespository _coinRespository;
@@ -17,6 +17,7 @@ class HomeProvider with ChangeNotifier {
 
   String? _error;
   String? get error => _error;
+
   List<Coin> _listOfCoins = [];
   List<Coin> get listOfCoins => _listOfCoins;
 

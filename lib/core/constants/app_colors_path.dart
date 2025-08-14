@@ -9,4 +9,7 @@ class AppColorsPath {
   static Color red = const Color(0xFFCD0000);
   static Color darkBlue = const Color(0xFF11183C);
   static Color lightGreen = const Color(0xFFCDFFC5);
+  static Color gray2 = const Color(0xFFD7D9E4);
+  static Color black = const Color(0xFF121212);
+  static Color darkSurface = const Color(0xFF22283A);
 }

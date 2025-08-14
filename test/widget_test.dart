@@ -14,7 +14,7 @@ void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     // Truyền tham số onboardingCompleted
-    await tester.pumpWidget(const MyApp(onboardingCompleted: false));
+    await tester.pumpWidget(const CryptoExchange(onboardingCompleted: false));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
