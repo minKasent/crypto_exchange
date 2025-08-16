@@ -3,8 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class StorageService {
   /// Init Storage Service instance
   StorageService._internal();
-  static final StorageService _instance = StorageService._internal();
-  static StorageService get instance => _instance;
+  static final StorageService _instance = StorageService._internal(); // singleton instance
+  static StorageService get instance => _instance;// factory constructor
 
   /// declare key
   static const String onboardingKey = "onboarding_completed_key";
@@ -13,9 +13,8 @@ class StorageService {
 
   /// Init Share preferences
   Future<void> initSharedPreferences() async {
-    _sharedPreferences = await SharedPreferences.getInstance();
+    _sharedPreferences = await SharedPreferences.getInstance();// get instance default of SharedPreferences
   }
-
   /// global function to set bool function by key and value
   Future<void> setBoolValue(String key, bool value) async {
     await _sharedPreferences.setBool(key, value);
@@ -31,8 +30,8 @@ class StorageService {
     await setBoolValue(onboardingKey, value);
   }
 
-  /// get onboarindg value
+  /// get onboarding value
   bool getOnboardingCompleted() {
-    return getBoolValue(onboardingKey);
+    return getBoolValue(onboardingKey);// APP -> getOnboardingCompleted() -> getBoolvalue
   }
 }

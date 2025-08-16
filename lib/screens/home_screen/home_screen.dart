@@ -47,65 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: AppColorsPath.lightWhite,
     );
   }
-
-  BottomNavigationBar _buildBottomNavigationBarWidget() {
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      backgroundColor: AppColorsPath.white,
-      selectedItemColor: AppColorsPath.blue,
-      unselectedItemColor: AppColorsPath.grey,
-      elevation: 10,
-      currentIndex: currentIndex,
-      onTap: (index) {
-        setState(() {
-          currentIndex = index;
-        });
-      },
-      items: [
-        BottomNavigationBarItem(
-          icon: ImageIcon(AssetImage(AppIconsPath.iconsHome)),
-          activeIcon: ImageIcon(
-            AssetImage(AppIconsPath.iconsHome),
-            color: AppColorsPath.blue,
-          ),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: ImageIcon(AssetImage(AppIconsPath.iconsTrade)),
-          activeIcon: ImageIcon(
-            AssetImage(AppIconsPath.iconsTrade),
-            color: AppColorsPath.blue,
-          ),
-          label: 'Trade',
-        ),
-        BottomNavigationBarItem(
-          icon: ImageIcon(AssetImage(AppIconsPath.iconsMarket)),
-          activeIcon: ImageIcon(
-            AssetImage(AppIconsPath.iconsMarket),
-            color: AppColorsPath.blue,
-          ),
-          label: 'Market',
-        ),
-        BottomNavigationBarItem(
-          icon: ImageIcon(AssetImage(AppIconsPath.iconsFavorites)),
-          activeIcon: ImageIcon(
-            AssetImage(AppIconsPath.iconsFavorites),
-            color: AppColorsPath.blue,
-          ),
-          label: 'Favorites',
-        ),
-        BottomNavigationBarItem(
-          icon: ImageIcon(AssetImage(AppIconsPath.iconsWallet)),
-          activeIcon: ImageIcon(
-            AssetImage(AppIconsPath.iconsWallet),
-            color: AppColorsPath.blue,
-          ),
-          label: 'Wallet',
-        ),
-      ],
-    );
-  }
-
   Widget _buildBodyWidget() {
     switch (currentIndex) {
       case 0:
@@ -213,6 +154,64 @@ class _HomeScreenState extends State<HomeScreen> {
       default:
         return Center(child: Text("Home"));
     }
+  }
+
+  BottomNavigationBar _buildBottomNavigationBarWidget() {
+    return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
+      backgroundColor: AppColorsPath.white,
+      selectedItemColor: AppColorsPath.blue,
+      unselectedItemColor: AppColorsPath.grey,
+      elevation: 10,
+      currentIndex: currentIndex,
+      onTap: (index) {
+        setState(() {
+          currentIndex = index;
+        });
+      },
+      items: [
+        BottomNavigationBarItem(
+          icon: ImageIcon(AssetImage(AppIconsPath.iconsHome)),
+          activeIcon: ImageIcon(
+            AssetImage(AppIconsPath.iconsHome),
+            color: AppColorsPath.blue,
+          ),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: ImageIcon(AssetImage(AppIconsPath.iconsTrade)),
+          activeIcon: ImageIcon(
+            AssetImage(AppIconsPath.iconsTrade),
+            color: AppColorsPath.blue,
+          ),
+          label: 'Trade',
+        ),
+        BottomNavigationBarItem(
+          icon: ImageIcon(AssetImage(AppIconsPath.iconsMarket)),
+          activeIcon: ImageIcon(
+            AssetImage(AppIconsPath.iconsMarket),
+            color: AppColorsPath.blue,
+          ),
+          label: 'Market',
+        ),
+        BottomNavigationBarItem(
+          icon: ImageIcon(AssetImage(AppIconsPath.iconsFavorites)),
+          activeIcon: ImageIcon(
+            AssetImage(AppIconsPath.iconsFavorites),
+            color: AppColorsPath.blue,
+          ),
+          label: 'Favorites',
+        ),
+        BottomNavigationBarItem(
+          icon: ImageIcon(AssetImage(AppIconsPath.iconsWallet)),
+          activeIcon: ImageIcon(
+            AssetImage(AppIconsPath.iconsWallet),
+            color: AppColorsPath.blue,
+          ),
+          label: 'Wallet',
+        ),
+      ],
+    );
   }
 
   Widget _buildSectionHeader(String title) {
