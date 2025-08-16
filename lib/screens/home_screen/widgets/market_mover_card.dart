@@ -23,7 +23,6 @@ class MarketMoverCard extends StatelessWidget {
     required this.volume,
     required this.chartPath,
     super.key,
-
   });
 
   @override

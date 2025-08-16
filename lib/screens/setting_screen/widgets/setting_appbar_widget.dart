@@ -36,6 +36,7 @@ class SettingAppbarWidget extends StatelessWidget
           onPressed: () {},
           icon: Image.asset(AppIconsPath.iconsSearch),
         ),
+        SizedBox(width: 10,),
       ],
     );
   }

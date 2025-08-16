@@ -158,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   BottomNavigationBar _buildBottomNavigationBarWidget() {
     return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
+      type: BottomNavigationBarType.shifting,
       backgroundColor: AppColorsPath.white,
       selectedItemColor: AppColorsPath.blue,
       unselectedItemColor: AppColorsPath.grey,

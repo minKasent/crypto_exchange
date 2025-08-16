@@ -1,10 +1,9 @@
 import 'package:crypto_exchange/components/app_text.dart';
 import 'package:crypto_exchange/components/app_text_style.dart';
-import 'package:crypto_exchange/screens/home_screen/home_screen.dart';
-import 'package:crypto_exchange/screens/onboarding_screen/widgets/onboarding_body_widget.dart';
 import 'package:crypto_exchange/core/constants/app_colors_path.dart';
 import 'package:crypto_exchange/core/constants/app_images_path.dart';
 import 'package:crypto_exchange/core/extensions/context_extension.dart';
+import 'package:crypto_exchange/screens/onboarding_screen/widgets/onboarding_body_widget.dart';
 import 'package:crypto_exchange/services/storage_service.dart';
 import 'package:flutter/material.dart';
 

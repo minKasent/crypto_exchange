@@ -1,15 +1,12 @@
 import 'package:crypto_exchange/components/app_button.dart';
-import 'package:crypto_exchange/core/constants/app_data.dart';
 import 'package:crypto_exchange/core/constants/app_icons_path.dart';
 import 'package:crypto_exchange/core/enum/enum.dart';
 import 'package:crypto_exchange/core/extensions/context_extension.dart';
 import 'package:crypto_exchange/models/setting_category_item_model.dart';
-import 'package:crypto_exchange/providers/theme_provider.dart';
 import 'package:crypto_exchange/screens/setting_screen/widgets/setting_appbar_widget.dart';
 import 'package:crypto_exchange/screens/setting_screen/widgets/setting_category_items_widget.dart';
 import 'package:crypto_exchange/screens/setting_screen/widgets/setting_user_info_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
@@ -40,7 +37,7 @@ class SettingScreen extends StatelessWidget {
     ),
   ];
 
-  static final List<SettingCategoryItemModel> settingAcountItems = [
+  static final List<SettingCategoryItemModel> settingAccountItems = [
     SettingCategoryItemModel(
       iconPath: AppIconsPath.iconsTheme,
       onTap: (context) {},
@@ -98,13 +95,13 @@ class SettingScreen extends StatelessWidget {
               const SizedBox(height: 15),
 
               SettingCategoryItemsWidget(
-                categoryTitle: "Finance",
-                categoryItems: settingAcountItems,
+                categoryTitle: "Account",
+                categoryItems: settingAccountItems,
               ),
               const SizedBox(height: 15),
 
               SettingCategoryItemsWidget(
-                categoryTitle: "Finance",
+                categoryTitle: "More",
                 categoryItems: settingMoreItems,
               ),
               SizedBox(height: 24),

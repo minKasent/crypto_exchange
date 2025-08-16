@@ -57,18 +57,16 @@ class SettingUserInfoWidget extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     InkWell(
-                      onTap: () {
-                        Clipboard.setData(ClipboardData(text: userId)).then((
-                          _,
-                        ) {
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Copied to clipboard!'),
-                              ),
-                            );
-                          }
-                        });
+                      onTap: () async {
+                        await Clipboard.setData(ClipboardData(text: userId));
+                        if (!context.mounted) return;
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Copied to clipboard!'),
+                            duration: Duration(seconds: 1),
+                          ),
+                        );
                       },
                       child: Image.asset(AppIconsPath.iconsCopy),
                     ),

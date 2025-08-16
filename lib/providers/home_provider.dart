@@ -26,12 +26,10 @@ class HomeProvider with ChangeNotifier {
     try {
       _setLoading(true);
       await _coinRespository.init(coins: AppData.coins);
-
       /// listen to stream data
       _coinRespository.coinStream.listen(
         (message) {
           _listOfCoins = message.values.toList();
-
           notifyListeners();
           debugPrint('_listOfCoins length: ${_listOfCoins.length}');
         },
@@ -48,16 +46,17 @@ class HomeProvider with ChangeNotifier {
     }
   }
 
-  void _setLoading(bool loading) {
-    if (loading != _isLoading) {
-      _isLoading = loading;
-      notifyListeners();
+  void _setLoading(bool loading) {// loading là trạng thái mới
+    if (loading != _isLoading) { // nếu loading khác với trạng thái hiện tại
+      _isLoading = loading; // cập nhật trạng thái loading
+      notifyListeners();// thông báo cho các widget lắng nghe rằng trạng thái đã thay đổi
+      // chỉ khi nào loading khác với trạng thái hiện tại thì mới cập nhật
     }
   }
 
-  void _setError(String? error) {
-    if (error != _error) {
-      _error = error;
+  void _setError(String? error) {// error là thông báo lỗi mới
+    if (error != _error) { // nếu error khác với thông báo lỗi hiện tại
+      _error = error; // cập nhật thông báo lỗi
       notifyListeners();
     }
   }
