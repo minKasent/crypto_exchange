@@ -15,12 +15,12 @@ class CoinRepository {
   }
 
   /// Get coins list
-  List<Coin> getCoinsList() { // lấy danh sách coin hiện tại từ BinanceWebsocketService
+  List<Coin> getCoinsList() { // lấy coin hiện tại từ BinanceWebsocketService sau đó chuyển sang list
     return _coinWebsocketService.currentCoins.values.toList();
   }
 
   // Dispose websocket connection
-  void dispose() {
+  void dispose() { // đóng kết nối websocket
     _coinWebsocketService.dispose();
   }
 }

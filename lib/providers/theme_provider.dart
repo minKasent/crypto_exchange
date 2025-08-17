@@ -5,7 +5,7 @@ class ThemeProvider with ChangeNotifier {
   ThemeData _themeData = AppTheme.lightTheme;// default theme == light theme
   bool _isDark = false; // default isDark == false
 
-  bool get isDark => _isDark;
+  bool get isDark => _isDark; // getter để lấy trạng thái isDark , hiện tại là false
 
   ThemeData get themeData => _themeData;
 
