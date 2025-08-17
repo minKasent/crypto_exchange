@@ -1,6 +1,5 @@
 import 'package:crypto_exchange/components/app_text.dart';
 import 'package:crypto_exchange/components/app_text_style.dart';
-import 'package:crypto_exchange/core/constants/app_colors_path.dart';
 import 'package:crypto_exchange/core/constants/app_icons_path.dart';
 import 'package:crypto_exchange/core/extensions/context_extension.dart';
 import 'package:flutter/material.dart';
@@ -20,21 +19,21 @@ class SettingAppbarWidget extends StatelessWidget
         onPressed: () {
           Navigator.pop(context);
         },
-        icon: Image.asset(AppIconsPath.iconsBack),
+        icon: Image.asset(AppIconsPath.iconsBack),color: context.theme.iconTheme.color,
       ),
       centerTitle: true,
       title: AppText(
         content: "Setting",
         style: AppTextStyle.text16Medium.copyWith(
           fontSize: 18,
-          color: AppColorsPath.darkBlue,
+          color: context.theme.textTheme.titleSmall!.color,
         ),
       ),
       actions: [
         IconButton(
           /// TODO: Implement search function
           onPressed: () {},
-          icon: Image.asset(AppIconsPath.iconsSearch),
+          icon: Image.asset(AppIconsPath.iconsSearch),color: context.theme.iconTheme.color ,
         ),
         SizedBox(width: 10,),
       ],

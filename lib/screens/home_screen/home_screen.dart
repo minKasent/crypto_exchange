@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   AppBar _buildAppBarWidget() {
     return AppBar(
-      leading: Image.asset(AppIconsPath.iconsProfile),
+      leading: Image.asset(AppIconsPath.iconsProfile,color: context.theme.iconTheme.color,),
       title: Image.asset(AppImagePaths.imgLogo),
       centerTitle: true,
       actions: [
@@ -40,11 +40,11 @@ class _HomeScreenState extends State<HomeScreen> {
           onPressed: () {
             Navigator.pushNamed(context, "/setting");
           },
-          icon: Image.asset(AppIconsPath.iconsSetting),
+          icon: Image.asset(AppIconsPath.iconsSetting,color: context.theme.iconTheme.color,),
         ),
         SizedBox(width: 10),
       ],
-      backgroundColor: AppColorsPath.lightWhite,
+      backgroundColor: context.theme.appBarTheme.backgroundColor,
     );
   }
   Widget _buildBodyWidget() {
@@ -63,9 +63,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     Center(
                       child: Column(
                         children: [
-                          AppText(content: "Portfolio Balance",style: AppTextStyle.text16Medium.copyWith(color: AppColorsPath.darkBlue),),
-                          AppText(content: "\$2,760.23"),
-                          AppText(content: "+2.60%",style: AppTextStyle.text16Medium.copyWith(color: AppColorsPath.darkBlue),),
+                          AppText(content: "Portfolio Balance",style: AppTextStyle.text16Medium.copyWith(color: context.theme.textTheme.titleSmall!.color),),
+                          AppText(content: "\$2,760.23",style: AppTextStyle.text32SemiBold.copyWith(color: context.theme.textTheme.titleSmall!.color),),
+                          AppText(content: "+2.60%",style: AppTextStyle.text16Medium.copyWith(color: context.theme.textTheme.titleSmall!.color),),
                         ],
                       ),
                     ),
@@ -83,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             iconPath: AppIconsPath.iconsBTC,
                             symbol: "BTC/USD",
                             price: "30,113.80",
-                            change: "+2.76%",
+                            change: "+2.76%" ,
                             isPositive: true,
                             volume: "394 897 432,26",
                             chartPath: true,
@@ -158,8 +158,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   BottomNavigationBar _buildBottomNavigationBarWidget() {
     return BottomNavigationBar(
-      type: BottomNavigationBarType.shifting,
-      backgroundColor: AppColorsPath.white,
+      type: BottomNavigationBarType.fixed,
+      backgroundColor: context.theme.bottomNavigationBarTheme.backgroundColor,
       selectedItemColor: AppColorsPath.blue,
       unselectedItemColor: AppColorsPath.grey,
       elevation: 10,
@@ -171,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       items: [
         BottomNavigationBarItem(
-          icon: ImageIcon(AssetImage(AppIconsPath.iconsHome)),
+          icon: ImageIcon(AssetImage(AppIconsPath.iconsHome),color:context.theme.iconTheme.color),
           activeIcon: ImageIcon(
             AssetImage(AppIconsPath.iconsHome),
             color: AppColorsPath.blue,
@@ -179,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: ImageIcon(AssetImage(AppIconsPath.iconsTrade)),
+          icon: ImageIcon(AssetImage(AppIconsPath.iconsTrade),color:context.theme.iconTheme.color),
           activeIcon: ImageIcon(
             AssetImage(AppIconsPath.iconsTrade),
             color: AppColorsPath.blue,
@@ -187,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
           label: 'Trade',
         ),
         BottomNavigationBarItem(
-          icon: ImageIcon(AssetImage(AppIconsPath.iconsMarket)),
+          icon: ImageIcon(AssetImage(AppIconsPath.iconsMarket),color:context.theme.iconTheme.color),
           activeIcon: ImageIcon(
             AssetImage(AppIconsPath.iconsMarket),
             color: AppColorsPath.blue,
@@ -195,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
           label: 'Market',
         ),
         BottomNavigationBarItem(
-          icon: ImageIcon(AssetImage(AppIconsPath.iconsFavorites)),
+          icon: ImageIcon(AssetImage(AppIconsPath.iconsFavorites),color:context.theme.iconTheme.color),
           activeIcon: ImageIcon(
             AssetImage(AppIconsPath.iconsFavorites),
             color: AppColorsPath.blue,
@@ -203,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
           label: 'Favorites',
         ),
         BottomNavigationBarItem(
-          icon: ImageIcon(AssetImage(AppIconsPath.iconsWallet)),
+          icon: ImageIcon(AssetImage(AppIconsPath.iconsWallet),color:context.theme.iconTheme.color ,),
           activeIcon: ImageIcon(
             AssetImage(AppIconsPath.iconsWallet),
             color: AppColorsPath.blue,
@@ -221,7 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
         AppText(
           content: title,
           style: AppTextStyle.text16Medium.copyWith(
-            color: AppColorsPath.darkBlue,
+            color: context.theme.textTheme.titleSmall!.color,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),

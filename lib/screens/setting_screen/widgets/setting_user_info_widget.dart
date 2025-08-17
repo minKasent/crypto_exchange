@@ -18,7 +18,7 @@ class SettingUserInfoWidget extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       width: context.screenWidth,
       decoration: BoxDecoration(
-        color: AppColorsPath.white,
+        color: context.theme.cardColor,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
@@ -44,7 +44,7 @@ class SettingUserInfoWidget extends StatelessWidget {
                     AppText(
                       content: "Dmutro \nto***@***.com",
                       textAlign: TextAlign.start,
-                      style: AppTextStyle.text14Regular.copyWith(fontSize: 16),
+                      style: AppTextStyle.text14Regular.copyWith(fontSize: 16,color: context.theme.textTheme.titleSmall!.color),
                     ),
                   ],
                 ),
@@ -53,7 +53,7 @@ class SettingUserInfoWidget extends StatelessWidget {
                   children: [
                     AppText(
                       content: "ID $userId",
-                      style: AppTextStyle.text14Regular,
+                      style: AppTextStyle.text14Regular.copyWith(color: context.theme.textTheme.titleSmall!.color),
                     ),
                     const SizedBox(width: 8),
                     InkWell(
@@ -68,7 +68,7 @@ class SettingUserInfoWidget extends StatelessWidget {
                           ),
                         );
                       },
-                      child: Image.asset(AppIconsPath.iconsCopy),
+                      child: Image.asset(AppIconsPath.iconsCopy,color: context.theme.iconTheme.color,),
                     ),
                   ],
                 ),
@@ -89,7 +89,7 @@ class SettingUserInfoWidget extends StatelessWidget {
               children: [
                 Image.asset(AppIconsPath.iconsCheckVerify),
                 const SizedBox(width: 5),
-                AppText(content: "Verify", style: AppTextStyle.text14Regular),
+                AppText(content: "Verify", style: AppTextStyle.text14Regular.copyWith(color: context.theme.textTheme.bodyMedium!.color)),
               ],
             ),
           ),

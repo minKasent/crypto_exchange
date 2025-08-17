@@ -1,6 +1,7 @@
 import 'package:crypto_exchange/components/app_text.dart';
 import 'package:crypto_exchange/components/app_text_style.dart';
 import 'package:crypto_exchange/core/constants/app_colors_path.dart';
+import 'package:crypto_exchange/core/extensions/context_extension.dart';
 import 'package:crypto_exchange/models/setting_category_item_model.dart';
 import 'package:crypto_exchange/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
@@ -25,14 +26,16 @@ class SettingCategoryItemsWidget extends StatelessWidget {
           padding: const EdgeInsets.only(left: 14),
           child: AppText(
             content: categoryTitle,
-            style: AppTextStyle.text14Regular,
+            style: AppTextStyle.text14Regular.copyWith(
+              color: context.theme.iconTheme.color,
+            ),
           ),
         ),
         SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
-            color: AppColorsPath.white,
+            color: context.theme.cardColor,
           ),
           padding: EdgeInsets.fromLTRB(16, 12, 0, 12),
           child: Column(
@@ -79,13 +82,18 @@ class SettingCategoryItemsWidget extends StatelessWidget {
   }) {
     return Row(
       children: [
-        Image.asset(iconPath, height: 24, width: 24),
+        Image.asset(
+          iconPath,
+          height: 24,
+          width: 24,
+          color: context.theme.iconTheme.color,
+        ),
         const SizedBox(width: 8),
         AppText(
           content: title,
           style: AppTextStyle.text14Regular.copyWith(
             fontSize: 16,
-            color: AppColorsPath.darkBlue,
+            color: context.theme.textTheme.titleSmall!.color,
           ),
         ),
         const Spacer(),
@@ -93,17 +101,16 @@ class SettingCategoryItemsWidget extends StatelessWidget {
           onTap: () {
             onTap(context);
           },
-          child:
-              isDarkMode
-                  ? _buildDarkModeSwitchWidget(context)
-                  : Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 17 / 2),
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      color: AppColorsPath.grey,
-                      size: 15,
-                    ),
+          child: isDarkMode
+              ? _buildDarkModeSwitchWidget(context)
+              : Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 17 / 2),
+                  child: Icon(
+                    Icons.arrow_forward_ios,
+                    color: AppColorsPath.grey,
+                    size: 15,
                   ),
+                ),
         ),
         const SizedBox(width: 12),
       ],
@@ -118,7 +125,7 @@ class SettingCategoryItemsWidget extends StatelessWidget {
           content: "Dark Mode",
           style: AppTextStyle.text14Regular.copyWith(
             fontSize: 14,
-            color: AppColorsPath.grey,
+            color: context.theme.iconTheme.color,
           ),
         ),
         const SizedBox(width: 12),
@@ -126,9 +133,33 @@ class SettingCategoryItemsWidget extends StatelessWidget {
           builder: (context, setState) {
             return SizedBox(
               height: 32,
-              child: Switch(
+              child:  Switch(
                 padding: EdgeInsets.zero,
                 value: isDarkMode,
+                activeColor: AppColorsPath.white,
+                activeTrackColor: AppColorsPath.green,
+                inactiveTrackColor: AppColorsPath.gray2,
+                inactiveThumbColor: AppColorsPath.white,
+                splashRadius: 0,
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
+                thumbIcon: WidgetStateProperty.resolveWith<Icon?>((Set<WidgetState> states) {
+                  if (states.contains(WidgetState.selected)) {
+                    return Icon(
+                      Icons.circle,
+                      size: 20,
+                      color: AppColorsPath.white,
+                    );
+                  }
+                  return Icon(
+                    Icons.circle,
+                    size: 16,
+                    color: AppColorsPath.white,
+                  );
+                }),
+                overlayColor: WidgetStateProperty.all(Colors.transparent),
+                focusColor: Colors.transparent,
+                hoverColor: Colors.transparent,
                 onChanged: (value) {
                   setState(() {
                     isDarkMode = value;

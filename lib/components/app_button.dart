@@ -2,6 +2,7 @@ import 'package:crypto_exchange/components/app_text.dart';
 import 'package:crypto_exchange/components/app_text_style.dart';
 import 'package:crypto_exchange/core/constants/app_colors_path.dart';
 import 'package:crypto_exchange/core/enum/enum.dart';
+import 'package:crypto_exchange/core/extensions/context_extension.dart';
 import 'package:flutter/cupertino.dart';
 
 class AppButton extends StatelessWidget {
@@ -28,9 +29,9 @@ class AppButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(color: _getBorderColor(), width: 2),
+          border: Border.all(color: _getBorderColor(context), width: 2),
           borderRadius: BorderRadius.circular(12),
-          color: _getButtonColor(),
+          color: _getButtonColor(context),
         ),
         width: width,
         padding: EdgeInsets.symmetric(vertical: 12),
@@ -46,7 +47,7 @@ class AppButton extends StatelessWidget {
               content: title,
               style: AppTextStyle.text16Medium.copyWith(
                 fontSize: 18,
-                color: _getTitleColor(),
+                color: _getTitleColor(context),
               ),
             ),
             if (rightIconPath != null) ...[
@@ -59,29 +60,33 @@ class AppButton extends StatelessWidget {
     );
   }
 
-  Color _getButtonColor() {
+  Color _getButtonColor(BuildContext context) {
     switch (buttonState) {
       case ButtonState.normal:
         return AppColorsPath.blue;
       case ButtonState.disable:
         return AppColorsPath.gray2;
       case ButtonState.second:
-        return AppColorsPath.white;
+        return context.theme.brightness == Brightness.dark
+            ? AppColorsPath.darkSurface
+            : AppColorsPath.white;
     }
   }
 
-  Color _getTitleColor() {
+  Color _getTitleColor(BuildContext context) {
     switch (buttonState) {
       case ButtonState.normal:
         return AppColorsPath.white;
       case ButtonState.disable:
         return AppColorsPath.grey;
       case ButtonState.second:
-        return AppColorsPath.blue;
+        return context.theme.brightness == Brightness.dark
+            ? AppColorsPath.white
+            : AppColorsPath.blue;
     }
   }
 
-  Color _getBorderColor() {
+  Color _getBorderColor(BuildContext context) {
     switch (buttonState) {
       case ButtonState.normal:
         return AppColorsPath.blue;

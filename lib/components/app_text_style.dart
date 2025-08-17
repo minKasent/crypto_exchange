@@ -1,4 +1,3 @@
-import 'package:crypto_exchange/core/constants/app_colors_path.dart';
 import 'package:flutter/material.dart';
 
 class AppTextStyle {
@@ -16,6 +15,6 @@ class AppTextStyle {
     fontFamily: 'Readex Pro',
     fontSize: 16,
     fontWeight: FontWeight.w500,
-    color: AppColorsPath.white,
+    // color: AppColorsPath.white,
   );
 }

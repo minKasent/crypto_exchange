@@ -31,9 +31,9 @@ class MarketMoverCard extends StatelessWidget {
       width: (156 / 375) * context.screenWidth,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColorsPath.white,
+        color: context.theme.cardColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: context.theme.dividerColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,14 +46,14 @@ class MarketMoverCard extends StatelessWidget {
                   AppText(
                     content: symbol,
                     style: AppTextStyle.text14Regular.copyWith(
-                      color: AppColorsPath.darkBlue,
+                      color: context.theme.textTheme.titleSmall!.color,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   AppText(
                     content: price,
                     style: AppTextStyle.text16Medium.copyWith(
-                      color: AppColorsPath.darkBlue,
+                      color: context.theme.textTheme.titleSmall!.color,
                     ),
                   ),
                 ],
@@ -65,7 +65,7 @@ class MarketMoverCard extends StatelessWidget {
           AppText(
             content: change,
             style: AppTextStyle.text14Regular.copyWith(
-              color: isPositive ? AppColorsPath.green : AppColorsPath.red,
+              color: isPositive ? context.theme.textTheme.titleMedium!.color : AppColorsPath.red,
             ),
           ),
           Center(
@@ -78,14 +78,14 @@ class MarketMoverCard extends StatelessWidget {
           AppText(
             content: "24H Vol.",
             style: AppTextStyle.text14Regular.copyWith(
-              color: AppColorsPath.grey,
+              color: context.theme.textTheme.titleLarge!.color,
               fontSize: 12,
             ),
           ),
           AppText(
             content: volume,
             style: AppTextStyle.text14Regular.copyWith(
-              color: AppColorsPath.grey,
+              color: context.theme.textTheme.titleLarge!.color,
               fontSize: 12,
             ),
           ),

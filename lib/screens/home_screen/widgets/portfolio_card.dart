@@ -1,6 +1,7 @@
 import 'package:crypto_exchange/components/app_text.dart';
 import 'package:crypto_exchange/components/app_text_style.dart';
 import 'package:crypto_exchange/core/constants/app_colors_path.dart';
+import 'package:crypto_exchange/core/extensions/context_extension.dart';
 import 'package:flutter/material.dart';
 
 class PortfolioCard extends StatelessWidget {
@@ -27,7 +28,7 @@ class PortfolioCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: AppColorsPath.white,
+        color: context.theme.cardColor,
         boxShadow: [
           BoxShadow(
             color: Color(0xFF2F66F6).withValues(alpha: 0.5),
