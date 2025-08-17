@@ -10,7 +10,7 @@ class HomeProvider with ChangeNotifier {
     // init();
   }
 
-  final CoinRespository _coinRespository;
+  final CoinRepository _coinRespository;
 
   bool _isLoading = false;
   bool get isLoaded => _isLoading;
@@ -25,12 +25,15 @@ class HomeProvider with ChangeNotifier {
   Future<void> init() async {
     try {
       _setLoading(true);
-      await _coinRespository.init(coins: AppData.coins);
+
+      await _coinRespository.init(coins: AppData.coins); // khởi tạo kết nối với repository
+
       /// listen to stream data
-      _coinRespository.coinStream.listen(
+      _coinRespository.coinStream.listen( //  lắng nghe stream từ repository
+        // khi có dữ liệu mới từ stream thì sẽ nhận được message
         (message) {
-          _listOfCoins = message.values.toList();
-          notifyListeners();
+          _listOfCoins = message.values.toList(); // chuyển đổi map sang list
+          notifyListeners(); // thông báo cho các widget lắng nghe rằng dữ liệu đã thay đổi
           debugPrint('_listOfCoins length: ${_listOfCoins.length}');
         },
         onError: (error) {

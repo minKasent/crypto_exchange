@@ -27,10 +27,10 @@ class CryptoExchange extends StatelessWidget {
         Provider(
           create:
               (context) =>
-                  CoinRespository(context.read<BinanceWebsocketService>()),
+                  CoinRepository(context.read<BinanceWebsocketService>()),
         ),
         ChangeNotifierProvider(
-          create: (context) => HomeProvider(context.read<CoinRespository>()),
+          create: (context) => HomeProvider(context.read<CoinRepository>()),
         ),
       ],
       child: MyApp(onboardingCompleted: onboardingCompleted),

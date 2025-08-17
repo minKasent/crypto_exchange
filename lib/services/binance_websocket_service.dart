@@ -46,12 +46,10 @@ class BinanceWebsocketService {
 
       /// Listen to websocket channel
       if (_tickerChannel == null) return;
-
       _tickerChannel!.stream.listen(
         (message) {
-          // listen to datat from websocket
+          // listen to data from websocket
           final data = jsonDecode(message); // decode string to json
-
           if (data['data'] != null) {
             final coin = Coin.fromJson(
               data['data'],
