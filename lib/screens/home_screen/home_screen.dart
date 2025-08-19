@@ -144,7 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         );
       case 1:
-        return Center(child: Text("Trade"));
+        return const Center(child: Text("Trade"));
       case 2:
         return Center(child: Text("Market"));
       case 3:
