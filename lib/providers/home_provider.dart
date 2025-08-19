@@ -7,16 +7,17 @@ import 'package:flutter/material.dart';
 
 class HomeProvider with ChangeNotifier {
   HomeProvider(this._coinRespository) {
-    init();
+    // init();
   }
 
-  final CoinRespository _coinRespository;
+  final CoinRepository _coinRespository;
 
   bool _isLoading = false;
   bool get isLoaded => _isLoading;
 
   String? _error;
   String? get error => _error;
+
   List<Coin> _listOfCoins = [];
   List<Coin> get listOfCoins => _listOfCoins;
 
@@ -24,14 +25,15 @@ class HomeProvider with ChangeNotifier {
   Future<void> init() async {
     try {
       _setLoading(true);
-      await _coinRespository.init(coins: AppData.coins);
+
+      await _coinRespository.init(coins: AppData.coins); // khởi tạo kết nối với repository
 
       /// listen to stream data
-      _coinRespository.coinStream.listen(
+      _coinRespository.coinStream.listen( //  lắng nghe stream từ repository
+        // khi có dữ liệu mới từ stream thì sẽ nhận được message
         (message) {
-          _listOfCoins = message.values.toList();
-
-          notifyListeners();
+          _listOfCoins = message.values.toList(); // chuyển đổi map sang list
+          notifyListeners(); // thông báo cho các widget lắng nghe rằng dữ liệu đã thay đổi
           debugPrint('_listOfCoins length: ${_listOfCoins.length}');
         },
         onError: (error) {
@@ -47,16 +49,17 @@ class HomeProvider with ChangeNotifier {
     }
   }
 
-  void _setLoading(bool loading) {
-    if (loading != _isLoading) {
-      _isLoading = loading;
-      notifyListeners();
+  void _setLoading(bool loading) {// loading là trạng thái mới
+    if (loading != _isLoading) { // nếu loading khác với trạng thái hiện tại
+      _isLoading = loading; // cập nhật trạng thái loading
+      notifyListeners();// thông báo cho các widget lắng nghe rằng trạng thái đã thay đổi
+      // chỉ khi nào loading khác với trạng thái hiện tại thì mới cập nhật
     }
   }
 
-  void _setError(String? error) {
-    if (error != _error) {
-      _error = error;
+  void _setError(String? error) {// error là thông báo lỗi mới
+    if (error != _error) { // nếu error khác với thông báo lỗi hiện tại
+      _error = error; // cập nhật thông báo lỗi
       notifyListeners();
     }
   }

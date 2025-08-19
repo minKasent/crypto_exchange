@@ -28,7 +28,7 @@ class BinanceWebsocketService {
   final Map<String, Coin> _coinData = {};
 
   /// Getter for coin data
-  Map<String, Coin> get currentCoins => _coinData;
+  Map<String, Coin> get currentCoins => _coinData; // response coin hiện tại từ websocket
 
   /// Connect to binance websocket and listen for symbol coin updates
   Future<void> connectToTickers({required List<String> coins}) async {
@@ -46,19 +46,17 @@ class BinanceWebsocketService {
 
       /// Listen to websocket channel
       if (_tickerChannel == null) return;
-
       _tickerChannel!.stream.listen(
         (message) {
-          // listen to datat from websocket
+          // listen to data from websocket
           final data = jsonDecode(message); // decode string to json
-
           if (data['data'] != null) {
             final coin = Coin.fromJson(
               data['data'],
             ); // convert json to Coin model
             /// Add new data to stream
-            _coinData[coin.symbol] = coin;
-            _coinStreamController.add(_coinData);
+            _coinData[coin.symbol] = coin; // add coin vào danh sách coin hiện tại
+            _coinStreamController.add(_coinData);// add coin vào stream
             debugPrint("Updated coin data for ${coin.symbol}: $coin}");
           }
         },

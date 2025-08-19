@@ -9,6 +9,5 @@ class AppImagePaths {
   static const String imgPortfolioGraph = 'assets/images/portfolio_graph.png';
   static const String imgSharpRecovery = 'assets/images/sharp_recovery.png';
   static const String imgSteadyGrowth = 'assets/images/steady_growth.png';
-
-
+  static const String imgAvartar = 'assets/images/avartar.png';
 }

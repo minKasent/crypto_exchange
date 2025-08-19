@@ -1,10 +1,9 @@
 import 'package:crypto_exchange/components/app_text.dart';
 import 'package:crypto_exchange/components/app_text_style.dart';
-import 'package:crypto_exchange/screens/home_screen/home_screen.dart';
-import 'package:crypto_exchange/screens/onboarding_screen/widgets/onboarding_body_widget.dart';
 import 'package:crypto_exchange/core/constants/app_colors_path.dart';
 import 'package:crypto_exchange/core/constants/app_images_path.dart';
 import 'package:crypto_exchange/core/extensions/context_extension.dart';
+import 'package:crypto_exchange/screens/onboarding_screen/widgets/onboarding_body_widget.dart';
 import 'package:crypto_exchange/services/storage_service.dart';
 import 'package:flutter/material.dart';
 
@@ -48,19 +47,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 controller: _pageController,
                 children: const [
                   OnboardingBodyWidget(
-                    imagePath: 'assets/images/market_analysis.png',
+                    imagePath: AppImagePaths.imgMarketAnalysis,
                     title: 'Take hold of your finances',
                     description:
                         'Lorem ipsum dolor sit amet, consectetur \n adipiscing elit. Ut eget mauris massa pharetra.',
                   ),
                   OnboardingBodyWidget(
-                    imagePath: 'assets/images/mobile_financial_analytics.png',
+                    imagePath: AppImagePaths.imgMobileFinancialAnalytics,
                     title: 'Smart trading tools',
                     description:
                         'Lorem ipsum dolor sit amet, consectetur \n adipiscing elit. Ut eget mauris massa pharetra.',
                   ),
                   OnboardingBodyWidget(
-                    imagePath: 'assets/images/blockchain_development.png',
+                    imagePath: AppImagePaths.imgBlockchainDevelopment,
                     title: 'Invest in the future',
                     description:
                         'Lorem ipsum dolor sit amet, consectetur \n adipiscing elit. Ut eget mauris massa pharetra.',
@@ -99,11 +98,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 } else {
                   await StorageService.instance.setOnboardingCompleted(true);
                   if (context.mounted) {
-                    Navigator.pushReplacement(
+                    Navigator.pushReplacementNamed(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => const HomeScreen(),
-                      ),
+                      '/home',
                     );
                   }
                 }

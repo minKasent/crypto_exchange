@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColorsPath.lightWhite,
+      backgroundColor: context.theme.scaffoldBackgroundColor,
       appBar: _buildAppBarWidget(),
       body: _buildBodyWidget(),
       bottomNavigationBar: _buildBottomNavigationBarWidget(),
@@ -32,78 +32,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
   AppBar _buildAppBarWidget() {
     return AppBar(
-      leading: Image.asset(AppIconsPath.iconsProfile),
+      leading: Image.asset(AppIconsPath.iconsProfile,color: context.theme.iconTheme.color,),
       title: Image.asset(AppImagePaths.imgLogo),
       centerTitle: true,
       actions: [
         IconButton(
-          onPressed: () {},
-          icon: Image.asset(AppIconsPath.iconsSetting),
+          onPressed: () {
+            Navigator.pushNamed(context, "/setting");
+          },
+          icon: Image.asset(AppIconsPath.iconsSetting,color: context.theme.iconTheme.color,),
         ),
         SizedBox(width: 10),
       ],
-      backgroundColor: AppColorsPath.lightWhite,
+      backgroundColor: context.theme.appBarTheme.backgroundColor,
     );
   }
-
-  BottomNavigationBar _buildBottomNavigationBarWidget() {
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      backgroundColor: AppColorsPath.white,
-      selectedItemColor: AppColorsPath.blue,
-      unselectedItemColor: AppColorsPath.grey,
-      elevation: 10,
-      currentIndex: currentIndex,
-      onTap: (index) {
-        setState(() {
-          currentIndex = index;
-        });
-      },
-      items: [
-        BottomNavigationBarItem(
-          icon: ImageIcon(AssetImage(AppIconsPath.iconsHome)),
-          activeIcon: ImageIcon(
-            AssetImage(AppIconsPath.iconsHome),
-            color: AppColorsPath.blue,
-          ),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: ImageIcon(AssetImage(AppIconsPath.iconsTrade)),
-          activeIcon: ImageIcon(
-            AssetImage(AppIconsPath.iconsTrade),
-            color: AppColorsPath.blue,
-          ),
-          label: 'Trade',
-        ),
-        BottomNavigationBarItem(
-          icon: ImageIcon(AssetImage(AppIconsPath.iconsMarket)),
-          activeIcon: ImageIcon(
-            AssetImage(AppIconsPath.iconsMarket),
-            color: AppColorsPath.blue,
-          ),
-          label: 'Market',
-        ),
-        BottomNavigationBarItem(
-          icon: ImageIcon(AssetImage(AppIconsPath.iconsFavorites)),
-          activeIcon: ImageIcon(
-            AssetImage(AppIconsPath.iconsFavorites),
-            color: AppColorsPath.blue,
-          ),
-          label: 'Favorites',
-        ),
-        BottomNavigationBarItem(
-          icon: ImageIcon(AssetImage(AppIconsPath.iconsWallet)),
-          activeIcon: ImageIcon(
-            AssetImage(AppIconsPath.iconsWallet),
-            color: AppColorsPath.blue,
-          ),
-          label: 'Wallet',
-        ),
-      ],
-    );
-  }
-
   Widget _buildBodyWidget() {
     switch (currentIndex) {
       case 0:
@@ -117,7 +60,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    SizedBox(height: 20),
+                    Center(
+                      child: Column(
+                        children: [
+                          AppText(content: "Portfolio Balance",style: AppTextStyle.text16Medium.copyWith(color: context.theme.textTheme.titleSmall!.color),),
+                          AppText(content: "\$2,760.23",style: AppTextStyle.text32SemiBold.copyWith(color: context.theme.textTheme.titleSmall!.color),),
+                          AppText(content: "+2.60%",style: AppTextStyle.text16Medium.copyWith(color: context.theme.textTheme.titleSmall!.color),),
+                        ],
+                      ),
+                    ),
                     Image.asset(AppImagePaths.imgPortfolioGraph),
                     // MARKET MOVERS
                     _buildSectionHeader("Market Movers"),
@@ -132,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             iconPath: AppIconsPath.iconsBTC,
                             symbol: "BTC/USD",
                             price: "30,113.80",
-                            change: "+2.76%",
+                            change: "+2.76%" ,
                             isPositive: true,
                             volume: "394 897 432,26",
                             chartPath: true,
@@ -205,6 +156,64 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  BottomNavigationBar _buildBottomNavigationBarWidget() {
+    return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
+      backgroundColor: context.theme.bottomNavigationBarTheme.backgroundColor,
+      selectedItemColor: AppColorsPath.blue,
+      unselectedItemColor: AppColorsPath.grey,
+      elevation: 10,
+      currentIndex: currentIndex,
+      onTap: (index) {
+        setState(() {
+          currentIndex = index;
+        });
+      },
+      items: [
+        BottomNavigationBarItem(
+          icon: ImageIcon(AssetImage(AppIconsPath.iconsHome),color:context.theme.iconTheme.color),
+          activeIcon: ImageIcon(
+            AssetImage(AppIconsPath.iconsHome),
+            color: AppColorsPath.blue,
+          ),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: ImageIcon(AssetImage(AppIconsPath.iconsTrade),color:context.theme.iconTheme.color),
+          activeIcon: ImageIcon(
+            AssetImage(AppIconsPath.iconsTrade),
+            color: AppColorsPath.blue,
+          ),
+          label: 'Trade',
+        ),
+        BottomNavigationBarItem(
+          icon: ImageIcon(AssetImage(AppIconsPath.iconsMarket),color:context.theme.iconTheme.color),
+          activeIcon: ImageIcon(
+            AssetImage(AppIconsPath.iconsMarket),
+            color: AppColorsPath.blue,
+          ),
+          label: 'Market',
+        ),
+        BottomNavigationBarItem(
+          icon: ImageIcon(AssetImage(AppIconsPath.iconsFavorites),color:context.theme.iconTheme.color),
+          activeIcon: ImageIcon(
+            AssetImage(AppIconsPath.iconsFavorites),
+            color: AppColorsPath.blue,
+          ),
+          label: 'Favorites',
+        ),
+        BottomNavigationBarItem(
+          icon: ImageIcon(AssetImage(AppIconsPath.iconsWallet),color:context.theme.iconTheme.color ,),
+          activeIcon: ImageIcon(
+            AssetImage(AppIconsPath.iconsWallet),
+            color: AppColorsPath.blue,
+          ),
+          label: 'Wallet',
+        ),
+      ],
+    );
+  }
+
   Widget _buildSectionHeader(String title) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -212,7 +221,7 @@ class _HomeScreenState extends State<HomeScreen> {
         AppText(
           content: title,
           style: AppTextStyle.text16Medium.copyWith(
-            color: AppColorsPath.darkBlue,
+            color: context.theme.textTheme.titleSmall!.color,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
