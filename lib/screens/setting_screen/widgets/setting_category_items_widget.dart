@@ -116,7 +116,6 @@ class SettingCategoryItemsWidget extends StatelessWidget {
       ],
     );
   }
-
   Row _buildDarkModeSwitchWidget(BuildContext context) {
     bool isDarkMode = context.watch<ThemeProvider>().isDark;
     return Row(
