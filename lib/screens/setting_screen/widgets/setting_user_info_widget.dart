@@ -44,7 +44,10 @@ class SettingUserInfoWidget extends StatelessWidget {
                     AppText(
                       content: "Dmutro \nto***@***.com",
                       textAlign: TextAlign.start,
-                      style: AppTextStyle.text14Regular.copyWith(fontSize: 16,color: context.theme.textTheme.titleSmall!.color),
+                      style: AppTextStyle.text14Regular.copyWith(
+                        fontSize: 16,
+                        color: context.titleSmall!.color,
+                      ),
                     ),
                   ],
                 ),
@@ -53,7 +56,9 @@ class SettingUserInfoWidget extends StatelessWidget {
                   children: [
                     AppText(
                       content: "ID $userId",
-                      style: AppTextStyle.text14Regular.copyWith(color: context.theme.textTheme.titleSmall!.color),
+                      style: AppTextStyle.text14Regular.copyWith(
+                        color: context.titleSmallColor,
+                      ),
                     ),
                     const SizedBox(width: 8),
                     InkWell(
@@ -68,7 +73,10 @@ class SettingUserInfoWidget extends StatelessWidget {
                           ),
                         );
                       },
-                      child: Image.asset(AppIconsPath.iconsCopy,color: context.theme.iconTheme.color,),
+                      child: Image.asset(
+                        AppIconsPath.iconsCopy,
+                        color: context.theme.iconTheme.color,
+                      ),
                     ),
                   ],
                 ),
@@ -89,7 +97,12 @@ class SettingUserInfoWidget extends StatelessWidget {
               children: [
                 Image.asset(AppIconsPath.iconsCheckVerify),
                 const SizedBox(width: 5),
-                AppText(content: "Verify", style: AppTextStyle.text14Regular.copyWith(color: context.theme.textTheme.bodyMedium!.color)),
+                AppText(
+                  content: "Verify",
+                  style: AppTextStyle.text14Regular.copyWith(
+                    color: context.theme.textTheme.bodyMedium!.color,
+                  ),
+                ),
               ],
             ),
           ),
