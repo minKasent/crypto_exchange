@@ -1,7 +1,6 @@
 import 'package:crypto_exchange/screens/home_screen/home_screen.dart';
 import 'package:crypto_exchange/screens/onboarding_screen/onboarding_screen.dart';
 import 'package:crypto_exchange/screens/setting_screen/setting_screen.dart';
-import 'package:crypto_exchange/screens/trade_screen/trade_screen.dart';
 import 'package:flutter/cupertino.dart';
 
 class AppRoutes {
@@ -17,6 +16,6 @@ class AppRoutes {
     settingScreen: (context) => const SettingScreen(),
     onboardingScreen: (context) => const OnboardingScreen(),
     homeScreen: (context) => const HomeScreen(),
-    tradeScreen: (context) => const TradeScreen(),
+    // tradeScreen: (context) => const TradeScreen(),
   };
 }
