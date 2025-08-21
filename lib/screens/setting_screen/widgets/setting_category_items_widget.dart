@@ -101,28 +101,30 @@ class SettingCategoryItemsWidget extends StatelessWidget {
           onTap: () {
             onTap(context);
           },
-          child: isDarkMode
-              ? _buildDarkModeSwitchWidget(context)
-              : Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 17 / 2),
-                  child: Icon(
-                    Icons.arrow_forward_ios,
-                    color: AppColorsPath.grey,
-                    size: 15,
+          child:
+              isDarkMode
+                  ? _buildDarkModeSwitchWidget(context)
+                  : Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 17 / 2),
+                    child: Icon(
+                      Icons.arrow_forward_ios,
+                      color: AppColorsPath.grey,
+                      size: 15,
+                    ),
                   ),
-                ),
         ),
         const SizedBox(width: 12),
       ],
     );
   }
+
   Row _buildDarkModeSwitchWidget(BuildContext context) {
     bool isDarkMode = context.watch<ThemeProvider>().isDark;
     return Row(
       children: [
         AppText(
           content: "Dark Mode",
-          style: AppTextStyle.text14Regular.copyWith(
+          style: context.theme.textTheme.titleSmall!.copyWith(
             fontSize: 14,
             color: context.theme.iconTheme.color,
           ),
@@ -132,7 +134,7 @@ class SettingCategoryItemsWidget extends StatelessWidget {
           builder: (context, setState) {
             return SizedBox(
               height: 32,
-              child:  Switch(
+              child: Switch(
                 padding: EdgeInsets.zero,
                 value: isDarkMode,
                 activeColor: AppColorsPath.white,
@@ -142,7 +144,9 @@ class SettingCategoryItemsWidget extends StatelessWidget {
                 splashRadius: 0,
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 trackOutlineColor: WidgetStateProperty.all(Colors.transparent),
-                thumbIcon: WidgetStateProperty.resolveWith<Icon?>((Set<WidgetState> states) {
+                thumbIcon: WidgetStateProperty.resolveWith<Icon?>((
+                  Set<WidgetState> states,
+                ) {
                   if (states.contains(WidgetState.selected)) {
                     return Icon(
                       Icons.circle,

@@ -7,6 +7,7 @@ import 'package:crypto_exchange/core/extensions/context_extension.dart';
 import 'package:crypto_exchange/providers/home_provider.dart';
 import 'package:crypto_exchange/screens/home_screen/widgets/market_mover_card.dart';
 import 'package:crypto_exchange/screens/home_screen/widgets/portfolio_card.dart';
+import 'package:crypto_exchange/screens/trade_screen/trade_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,10 +22,18 @@ class _HomeScreenState extends State<HomeScreen> {
   int currentIndex = 0;
 
   @override
+  void initState() {
+    super.initState();
+    // Bắt đầu lắng nghe dữ liệu coin khi màn hình được khởi tạo
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<HomeProvider>().init();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.theme.scaffoldBackgroundColor,
-      appBar: _buildAppBarWidget(),
       body: _buildBodyWidget(),
       bottomNavigationBar: _buildBottomNavigationBarWidget(),
     );
@@ -32,7 +41,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   AppBar _buildAppBarWidget() {
     return AppBar(
-      leading: Image.asset(AppIconsPath.iconsProfile,color: context.theme.iconTheme.color,),
+      leading: Image.asset(
+        AppIconsPath.iconsProfile,
+        color: context.theme.iconTheme.color,
+      ),
       title: Image.asset(AppImagePaths.imgLogo),
       centerTitle: true,
       actions: [
@@ -40,119 +52,144 @@ class _HomeScreenState extends State<HomeScreen> {
           onPressed: () {
             Navigator.pushNamed(context, "/setting");
           },
-          icon: Image.asset(AppIconsPath.iconsSetting,color: context.theme.iconTheme.color,),
+          icon: Image.asset(
+            AppIconsPath.iconsSetting,
+            color: context.theme.iconTheme.color,
+          ),
         ),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
       ],
       backgroundColor: context.theme.appBarTheme.backgroundColor,
     );
   }
+
   Widget _buildBodyWidget() {
     switch (currentIndex) {
       case 0:
         return Consumer<HomeProvider>(
           builder: (_, homeProvider, __) {
-            return SizedBox(
-              height: context.screenHeight * 0.85,
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Center(
-                      child: Column(
-                        children: [
-                          AppText(content: "Portfolio Balance",style: AppTextStyle.text16Medium.copyWith(color: context.theme.textTheme.titleSmall!.color),),
-                          AppText(content: "\$2,760.23",style: AppTextStyle.text32SemiBold.copyWith(color: context.theme.textTheme.titleSmall!.color),),
-                          AppText(content: "+2.60%",style: AppTextStyle.text16Medium.copyWith(color: context.theme.textTheme.titleSmall!.color),),
-                        ],
+            return Scaffold(
+              appBar: _buildAppBarWidget(),
+              body: SizedBox(
+                height: context.screenHeight * 0.85,
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Center(
+                        child: Column(
+                          children: [
+                            AppText(
+                              content: "Portfolio Balance",
+                              style: AppTextStyle.text16Medium.copyWith(
+                                color:
+                                context.theme.textTheme.titleSmall!.color,
+                              ),
+                            ),
+                            AppText(
+                              content: "\$2,760.23",
+                              style: AppTextStyle.text32SemiBold.copyWith(
+                                color:
+                                context.theme.textTheme.titleSmall!.color,
+                              ),
+                            ),
+                            AppText(
+                              content: "+2.60%",
+                              style: AppTextStyle.text16Medium.copyWith(
+                                color:
+                                context.theme.textTheme.titleSmall!.color,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Image.asset(AppImagePaths.imgPortfolioGraph),
-                    // MARKET MOVERS
-                    _buildSectionHeader("Market Movers"),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      height: (172 / 812) * context.screenHeight,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        shrinkWrap: true,
-                        children: const [
-                          MarketMoverCard(
-                            iconPath: AppIconsPath.iconsBTC,
-                            symbol: "BTC/USD",
-                            price: "30,113.80",
-                            change: "+2.76%" ,
-                            isPositive: true,
-                            volume: "394 897 432,26",
-                            chartPath: true,
-                          ),
-                          SizedBox(width: 12),
-                          MarketMoverCard(
-                            iconPath: AppIconsPath.iconsSLA,
-                            symbol: "SOL/USD",
-                            price: "40,11",
-                            change: "+3.75%",
-                            isPositive: true,
-                            volume: "150 897 992,26",
-                            chartPath: false,
-                          ),
-                          SizedBox(width: 12),
-                          MarketMoverCard(
-                            iconPath: AppIconsPath.iconsETH,
-                            symbol: "ETH/USD",
-                            price: "1,890.45",
-                            change: "-1.25%",
-                            isPositive: false,
-                            volume: "280 123 456,78",
-                            chartPath: false,
-                          ),
-                        ],
+                      Image.asset(AppImagePaths.imgPortfolioGraph),
+                      // MARKET MOVERS
+                      _buildSectionHeader("Market Movers"),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        height: (172 / 812) * context.screenHeight,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          children: const [
+                            MarketMoverCard(
+                              iconPath: AppIconsPath.iconsBTC,
+                              symbol: "BTC/USD",
+                              price: "30,113.80",
+                              change: "+2.76%",
+                              isPositive: true,
+                              volume: "394 897 432,26",
+                              chartPath: true,
+                            ),
+                            SizedBox(width: 12),
+                            MarketMoverCard(
+                              iconPath: AppIconsPath.iconsSLA,
+                              symbol: "SOL/USD",
+                              price: "40,11",
+                              change: "+3.75%",
+                              isPositive: true,
+                              volume: "150 897 992,26",
+                              chartPath: false,
+                            ),
+                            SizedBox(width: 12),
+                            MarketMoverCard(
+                              iconPath: AppIconsPath.iconsETH,
+                              symbol: "ETH/USD",
+                              price: "1,890.45",
+                              change: "-1.25%",
+                              isPositive: false,
+                              volume: "280 123 456,78",
+                              chartPath: false,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 24),
+                      const SizedBox(height: 24),
 
-                    // PORTFOLIO
-                    _buildSectionHeader("Portfolio"),
-                    const SizedBox(height: 16),
-                    Flexible(
-                      fit: FlexFit.loose,
-                      child: ListView.separated(
-                        separatorBuilder: (context, index) =>
-                            SizedBox(height: 16),
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: homeProvider.listOfCoins.length,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          final item = homeProvider.listOfCoins[index];
-                          return PortfolioCard(
-                            iconPath: AppIconsPath.iconsSLA,
-                            name: item.symbolName,
-                            symbol: "BTC",
-                            value: item.price,
-                            change: item.priceChangePercent,
-                            isPositive: true,
-                          );
-                        },
+                      // PORTFOLIO
+                      _buildSectionHeader("Portfolio"),
+                      const SizedBox(height: 16),
+                      Flexible(
+                        fit: FlexFit.loose,
+                        child: ListView.separated(
+                          separatorBuilder:
+                              (context, index) => const SizedBox(height: 16),
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: homeProvider.listOfCoins.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            final item = homeProvider.listOfCoins[index];
+                            return PortfolioCard(
+                              iconPath: AppIconsPath.iconsSLA,
+                              name: item.symbolName,
+                              symbol: "BTC",
+                              value: double.parse(item.price).toStringAsFixed(2),
+                              change: item.priceChangePercent,
+                              isPositive: true,
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             );
           },
         );
       case 1:
-        return const Center(child: Text("Trade"));
+        return const TradeScreen();
       case 2:
-        return Center(child: Text("Market"));
+        return const Center(child: Text("Market"));
       case 3:
-        return Center(child: Text("Favorites"));
+        return const Center(child: Text("Favorites"));
       case 4:
-        return Center(child: Text("Wallet"));
+        return const Center(child: Text("Wallet"));
       default:
-        return Center(child: Text("Home"));
+        return const Center(child: Text("Home"));
     }
   }
 
@@ -171,40 +208,55 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       items: [
         BottomNavigationBarItem(
-          icon: ImageIcon(AssetImage(AppIconsPath.iconsHome),color:context.theme.iconTheme.color),
-          activeIcon: ImageIcon(
+          icon: ImageIcon(
+            const AssetImage(AppIconsPath.iconsHome),
+            color: context.theme.iconTheme.color,
+          ),
+          activeIcon:  ImageIcon(
             AssetImage(AppIconsPath.iconsHome),
             color: AppColorsPath.blue,
           ),
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: ImageIcon(AssetImage(AppIconsPath.iconsTrade),color:context.theme.iconTheme.color),
-          activeIcon: ImageIcon(
+          icon: ImageIcon(
+            const AssetImage(AppIconsPath.iconsTrade),
+            color: context.theme.iconTheme.color,
+          ),
+          activeIcon:  ImageIcon(
             AssetImage(AppIconsPath.iconsTrade),
             color: AppColorsPath.blue,
           ),
           label: 'Trade',
         ),
         BottomNavigationBarItem(
-          icon: ImageIcon(AssetImage(AppIconsPath.iconsMarket),color:context.theme.iconTheme.color),
-          activeIcon: ImageIcon(
+          icon: ImageIcon(
+            const AssetImage(AppIconsPath.iconsMarket),
+            color: context.theme.iconTheme.color,
+          ),
+          activeIcon:  ImageIcon(
             AssetImage(AppIconsPath.iconsMarket),
             color: AppColorsPath.blue,
           ),
           label: 'Market',
         ),
         BottomNavigationBarItem(
-          icon: ImageIcon(AssetImage(AppIconsPath.iconsFavorites),color:context.theme.iconTheme.color),
-          activeIcon: ImageIcon(
+          icon: ImageIcon(
+            const AssetImage(AppIconsPath.iconsFavorites),
+            color: context.theme.iconTheme.color,
+          ),
+          activeIcon:  ImageIcon(
             AssetImage(AppIconsPath.iconsFavorites),
             color: AppColorsPath.blue,
           ),
           label: 'Favorites',
         ),
         BottomNavigationBarItem(
-          icon: ImageIcon(AssetImage(AppIconsPath.iconsWallet),color:context.theme.iconTheme.color ,),
-          activeIcon: ImageIcon(
+          icon: ImageIcon(
+            const AssetImage(AppIconsPath.iconsWallet),
+            color: context.theme.iconTheme.color,
+          ),
+          activeIcon:  ImageIcon(
             AssetImage(AppIconsPath.iconsWallet),
             color: AppColorsPath.blue,
           ),
@@ -214,7 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildSectionHeader(String title) {
+  Row _buildSectionHeader(String title) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

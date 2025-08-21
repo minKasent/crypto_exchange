@@ -1,5 +1,7 @@
+// lib/main.dart
 import 'package:crypto_exchange/providers/home_provider.dart';
 import 'package:crypto_exchange/providers/theme_provider.dart';
+import 'package:crypto_exchange/providers/trade_provider.dart';
 import 'package:crypto_exchange/repositories/coin_respository.dart';
 import 'package:crypto_exchange/routes/app_routes.dart';
 import 'package:crypto_exchange/services/binance_websocket_service.dart';
@@ -25,12 +27,15 @@ class CryptoExchange extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
         Provider(create: (context) => BinanceWebsocketService()),
         Provider(
-          create:
-              (context) =>
-                  CoinRepository(context.read<BinanceWebsocketService>()),
+          create: (context) =>
+              CoinRepository(context.read<BinanceWebsocketService>()),
         ),
         ChangeNotifierProvider(
           create: (context) => HomeProvider(context.read<CoinRepository>()),
+        ),
+        ChangeNotifierProvider(
+          create: (context) =>
+              TradeProvider(context.read<BinanceWebsocketService>()),
         ),
       ],
       child: MyApp(onboardingCompleted: onboardingCompleted),
@@ -50,9 +55,7 @@ class MyApp extends StatelessWidget {
       routes: AppRoutes.routes,
       theme: context.watch<ThemeProvider>().themeData,
       initialRoute:
-          onboardingCompleted
-              ? AppRoutes.homeScreen
-              : AppRoutes.onboardingScreen,
+      onboardingCompleted ? AppRoutes.homeScreen : AppRoutes.onboardingScreen,
     );
   }
 }

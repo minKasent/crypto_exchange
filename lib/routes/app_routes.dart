@@ -1,6 +1,8 @@
 import 'package:crypto_exchange/screens/home_screen/home_screen.dart';
 import 'package:crypto_exchange/screens/onboarding_screen/onboarding_screen.dart';
 import 'package:crypto_exchange/screens/setting_screen/setting_screen.dart';
+import 'package:crypto_exchange/screens/trade_screen/trade_screen.dart';
+import 'package:crypto_exchange/screens/trading_chart/trading_chart_screen.dart';
 import 'package:flutter/cupertino.dart';
 
 class AppRoutes {
@@ -11,11 +13,13 @@ class AppRoutes {
   static const String tradeScreen = '/trade';
   static const String marketScreen = '/market';
   static const String walletScreen = '/wallet';
+  static const String tradingChartScreen = '/tradingChart';
 
   static final Map<String, WidgetBuilder> routes = {
     settingScreen: (context) => const SettingScreen(),
     onboardingScreen: (context) => const OnboardingScreen(),
     homeScreen: (context) => const HomeScreen(),
-    // tradeScreen: (context) => const TradeScreen(),
+    tradeScreen: (context) => const TradeScreen(),
+    tradingChartScreen: (context) => const TradingChartScreen(),
   };
 }
