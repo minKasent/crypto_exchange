@@ -15,7 +15,7 @@ class BinanceWebsocketService {
       'wss://stream.binance.com:9443/stream?streams=';
   WebSocketChannel? _tickerChannel;
   final StreamController<Map<String, Coin>> _coinStreamController =
-  StreamController<Map<String, Coin>>.broadcast();
+      StreamController<Map<String, Coin>>.broadcast();
   Stream<Map<String, Coin>> get coinStream => _coinStreamController.stream;
   final Map<String, Coin> _coinData = {};
   Map<String, Coin> get currentCoins => _coinData;
@@ -23,18 +23,21 @@ class BinanceWebsocketService {
   // OrderBook Stream
   static const String _baseOrderBookUrl = 'wss://stream.binance.com:9443/ws/';
   WebSocketChannel? _orderBookChannel;
-  final StreamController<OrderBook> _orderBookStreamController =
-  StreamController<OrderBook>.broadcast();
-  Stream<OrderBook> get orderBookStream => _orderBookStreamController.stream;
+  StreamController<OrderBookModel> _orderBookStreamController =
+      StreamController<OrderBookModel>.broadcast();
+  Stream<OrderBookModel> get orderBookStream =>
+      _orderBookStreamController.stream;
 
   Future<void> connectToTickers({required List<String> coins}) async {
-    final streams = coins.map((coin) => '${coin.toLowerCase()}@ticker').join('/');
+    final streams = coins
+        .map((coin) => '${coin.toLowerCase()}@ticker')
+        .join('/');
     final url = _baseTickerUrl + streams;
     _tickerChannel = WebSocketChannel.connect(Uri.parse(url));
 
     if (_tickerChannel == null) return;
     _tickerChannel!.stream.listen(
-          (message) {
+      (message) {
         final data = jsonDecode(message);
         if (data['data'] != null) {
           final coin = Coin.fromJson(data['data']);
@@ -52,26 +55,37 @@ class BinanceWebsocketService {
   }
 
   void connectToOrderBook({required String symbol}) {
-    final url = '$_baseOrderBookUrl${symbol.toLowerCase()}@depth5@100ms';
+    disposeOrderBook();
+    try {
+      final url = '$_baseOrderBookUrl${symbol.toLowerCase()}@depth';
 
-    _orderBookChannel = WebSocketChannel.connect(Uri.parse(url));
+      _orderBookChannel = WebSocketChannel.connect(Uri.parse(url));
+      _orderBookStreamController = StreamController<OrderBookModel>.broadcast();
 
-    _orderBookChannel!.stream.listen(
-          (message) {
-        final data = jsonDecode(message);
-        if (data != null) {
-          final orderBook = OrderBook.fromJson(data);
-          _orderBookStreamController.add(orderBook);
-        }
-      },
-      onError: (error) {
-        debugPrint("Error In connecting to order book websocket: $error");
-        _orderBookStreamController.addError(error);
-      },
-      onDone: () {
-        debugPrint("Connection to order book websocket closed");
-      },
-    );
+      if (_orderBookChannel == null) return;
+
+      _orderBookChannel!.stream.listen(
+        (message) {
+          final data = jsonDecode(message);
+          if (data != null) {
+            final orderBook = OrderBookModel.fromJson(data);
+            _orderBookStreamController.add(orderBook);
+          } else {
+            debugPrint('OrderBook data is null: $data');
+          }
+        },
+        onError: (error) {
+          debugPrint("Error In connecting to order book websocket: $error");
+          _orderBookStreamController.addError(error);
+        },
+        onDone: () {
+          debugPrint("Connection to order book websocket closed");
+        },
+      );
+    } catch (e) {
+      debugPrint("Error In connecting to order book websocket: $e");
+      _orderBookStreamController.addError(e);
+    }
   }
 
   void closeOrderBookChannel() {
@@ -83,5 +97,10 @@ class BinanceWebsocketService {
     _orderBookStreamController.close();
     _tickerChannel?.sink.close();
     _orderBookChannel?.sink.close();
+  }
+
+  void disposeOrderBook() {
+    _orderBookChannel?.sink.close();
+    _orderBookStreamController.close();
   }
 }

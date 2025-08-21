@@ -1,15 +1,22 @@
-import 'dart:async';
+import 'package:crypto_exchange/core/constants/app_data.dart';
 import 'package:crypto_exchange/models/order_book_model.dart';
-import 'package:crypto_exchange/services/binance_websocket_service.dart';
+import 'package:crypto_exchange/repositories/orderbook_repository.dart';
 import 'package:flutter/material.dart';
 
 class TradeProvider with ChangeNotifier {
-  final BinanceWebsocketService _websocketService;
+  final OrderbookRepository orderbookRepository;
 
-  TradeProvider(this._websocketService);
+  TradeProvider(this.orderbookRepository) {
+    init();
+  }
 
-  OrderBook? _orderBook;
-  OrderBook? get orderBook => _orderBook;
+  List<OrderBookEntry> _bids = [];
+  List<OrderBookEntry> get bids => _bids;
+
+  List<OrderBookEntry> _asks = [];
+  List<OrderBookEntry> get asks => _asks;
+
+  String currentSymbol = AppData.coins.first;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -23,54 +30,45 @@ class TradeProvider with ChangeNotifier {
   double _sliderValue = 0;
   double get sliderValue => _sliderValue;
 
-  StreamSubscription? _orderBookSubscription;
-  Timer? _timeoutTimer;
-
-  final TextEditingController priceController = TextEditingController();
-  final TextEditingController amountController = TextEditingController();
-  final TextEditingController totalController = TextEditingController();
+  void init() {
+    try {
+      connectToOrderBookStream(currentSymbol);
+    } catch (e) {
+      debugPrint('Failed to init TradeProvider: $e');
+    }
+  }
 
   void connectToOrderBookStream(String symbol) {
-    _orderBookSubscription?.cancel();
-    _timeoutTimer?.cancel();
+    _bids = [];
+    _asks = [];
+    currentSymbol = symbol.toLowerCase();
 
     _setLoading(true);
     _setError(null);
 
-    _timeoutTimer = Timer(const Duration(seconds: 10), () {
-      if (_isLoading) {
-        _setError('Connection timeout. Please try again.');
-        debugPrint('OrderBook connection timeout for symbol: $symbol');
-      }
-    });
-
     try {
-      _websocketService.connectToOrderBook(symbol: symbol);
+      orderbookRepository.connectToOrderBook(symbol);
 
-      _orderBookSubscription = _websocketService.orderBookStream.listen(
+      orderbookRepository.orderBookStream.listen(
         (orderBookData) {
-          _timeoutTimer?.cancel();
-          _orderBook = orderBookData;
-          _setLoading(false);
-          _setError(null);
+          _bids = orderBookData.bids.take(10).toList();
+          _asks = orderBookData.asks.take(10).toList();
           notifyListeners();
           debugPrint('OrderBook data received for symbol: $symbol');
         },
         onError: (error) {
-          _timeoutTimer?.cancel();
           _setError(error.toString());
           debugPrint('OrderBook stream error: $error');
         },
         onDone: () {
-          _timeoutTimer?.cancel();
-          _setLoading(false);
           debugPrint('OrderBook stream closed for symbol: $symbol');
         },
       );
     } catch (e) {
-      _timeoutTimer?.cancel();
       _setError('Failed to connect to order book: $e');
       debugPrint('Failed to connect to order book: $e');
+    } finally {
+      _setLoading(false);
     }
   }
 
@@ -99,12 +97,7 @@ class TradeProvider with ChangeNotifier {
 
   @override
   void dispose() {
-    _orderBookSubscription?.cancel();
-    _timeoutTimer?.cancel();
-    _websocketService.closeOrderBookChannel();
-    priceController.dispose();
-    amountController.dispose();
-    totalController.dispose();
+    orderbookRepository.dispose();
     super.dispose();
   }
 }

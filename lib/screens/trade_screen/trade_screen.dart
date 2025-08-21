@@ -5,6 +5,7 @@ import 'package:crypto_exchange/components/app_text_style.dart';
 import 'package:crypto_exchange/core/constants/app_colors_path.dart';
 import 'package:crypto_exchange/core/enum/enum.dart';
 import 'package:crypto_exchange/core/extensions/context_extension.dart';
+import 'package:crypto_exchange/models/coin.dart';
 import 'package:crypto_exchange/providers/home_provider.dart';
 import 'package:crypto_exchange/providers/trade_provider.dart';
 import 'package:crypto_exchange/routes/app_routes.dart';
@@ -23,7 +24,6 @@ class TradeScreen extends StatefulWidget {
 class _TradeScreenState extends State<TradeScreen>
     with TickerProviderStateMixin {
   late final TabController _tabController;
-  bool _isOrderBookStreamInitialized = false;
 
   @override
   void initState() {
@@ -39,24 +39,15 @@ class _TradeScreenState extends State<TradeScreen>
 
   @override
   Widget build(BuildContext context) {
-    final homeProvider = context.watch<HomeProvider>();
-
-    if (homeProvider.listOfCoins.isNotEmpty && !_isOrderBookStreamInitialized) {
-      final symbol = homeProvider.listOfCoins.first.symbol;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.read<TradeProvider>().connectToOrderBookStream(symbol);
-      });
-      _isOrderBookStreamInitialized = true;
-    }
-
     return Scaffold(
       appBar: const TradeAppbarWidget(),
       body: Column(
         children: [
-          _buildCoinInfoHeader(),
           Padding(
-            padding:
-            const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 8.0,
+            ),
             child: Container(
               height: 32,
               decoration: BoxDecoration(
@@ -82,14 +73,16 @@ class _TradeScreenState extends State<TradeScreen>
                 ),
                 indicatorSize: TabBarIndicatorSize.tab,
                 onTap: (index) => setState(() {}),
-                tabs: ["Spot", "Margin", "Grid", "Fiat"]
-                    .asMap()
-                    .entries
-                    .map((entry) => _buildTab(entry.value, entry.key))
-                    .toList(),
+                tabs:
+                    ["Spot", "Margin", "Grid", "Fiat"]
+                        .asMap()
+                        .entries
+                        .map((entry) => _buildTab(entry.value, entry.key))
+                        .toList(),
               ),
             ),
           ),
+          _buildCoinInfoHeader(),
           Expanded(
             child: TabBarView(
               controller: _tabController,
@@ -106,181 +99,260 @@ class _TradeScreenState extends State<TradeScreen>
     );
   }
 
-  Widget _buildTab(String title, int index) {
+  Tab _buildTab(String title, int index) {
     return Tab(
       child: Center(
         child: AppText(
           content: title,
           style: AppTextStyle.text14Regular.copyWith(
-            color: _tabController.index == index
-                ? Colors.black
-                : AppColorsPath.grey,
+            color:
+                _tabController.index == index
+                    ? Colors.black
+                    : AppColorsPath.grey,
           ),
         ),
       ),
     );
   }
 
-  Widget _buildCoinInfoHeader() {
-    return Consumer<HomeProvider>(builder: (context, homeProvider, child) {
-      if (homeProvider.listOfCoins.isEmpty) {
-        return const SizedBox(
-            height: 60, child: Center(child: AppText(content: "Waiting for coin data...")));
-      }
+  Consumer<HomeProvider> _buildCoinInfoHeader() {
+    return Consumer<HomeProvider>(
+      builder: (context, homeProvider, child) {
+        if (homeProvider.listOfCoins.isEmpty) {
+          return const SizedBox(
+            height: 60,
+            child: Center(child: AppText(content: "Waiting for coin data...")),
+          );
+        }
+        Coin coin =
+            homeProvider.listOfCoins
+                .where(
+                  (e) =>
+                      e.symbol.toLowerCase() ==
+                      context.read<TradeProvider>().currentSymbol,
+                )
+                .toList()
+                .first;
 
-      final coin = homeProvider.listOfCoins.first;
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-        child: Row(
-          children: [
-            DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                value: coin.symbolName,
-                icon: const Icon(Icons.keyboard_arrow_down),
-                items: [
-                  DropdownMenuItem(
-                    value: coin.symbolName,
-                    child: AppText(
-                      content: coin.symbolName,
-                      style: AppTextStyle.text16Medium.copyWith(
-                          fontSize: 18, color: context.titleSmallColor),
-                    ),
-                  )
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      AppText(
+                        content: coin.symbolName,
+                        style: AppTextStyle.text16Medium.copyWith(
+                          color: context.titleSmallColor,
+                          fontSize: 18,
+                        ),
+                      ),
+                      SizedBox(width: 4),
+                      InkWell(
+                        /// Show bottomsheet to display list 20 coins
+                        onTap: () async {
+                          await showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return ListCoinsBottomSheet();
+                            },
+                          );
+                        },
+                        child: Icon(
+                          Icons.keyboard_arrow_down,
+                          color: AppColorsPath.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      AppText(
+                        content:
+                            "\$${double.parse(coin.price).toStringAsFixed(2)} ",
+                        style: AppTextStyle.text16Medium.copyWith(
+                          color: context.titleSmallColor,
+                          fontSize: 18,
+                        ),
+                      ),
+                      AppText(
+                        content:
+                            "≈\$${double.parse(coin.price).toStringAsFixed(2)}",
+                        style: AppTextStyle.text14Regular.copyWith(
+                          color: Colors.grey,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      AppText(
+                        content:
+                            "${double.parse(coin.priceChangePercent) > 0 ? "+" : ""}${double.parse(coin.priceChangePercent).toStringAsFixed(2)}%",
+                        style: AppTextStyle.text14Regular.copyWith(
+                          color:
+                              double.parse(coin.priceChangePercent) > 0
+                                  ? AppColorsPath.green
+                                  : AppColorsPath.red,
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
-                onChanged: (value) {},
               ),
-            ),
-            const Spacer(),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                AppText(
-                  content: "\$${double.parse(coin.price).toStringAsFixed(2)}",
-                  style: AppTextStyle.text16Medium
-                      .copyWith(color: context.titleSmallColor, fontSize: 18),
-                ),
-                Row(
-                  children: [
-                    AppText(
-                      content:
-                      "≈\$${double.parse(coin.price).toStringAsFixed(2)}",
-                      style: AppTextStyle.text14Regular
-                          .copyWith(color: Colors.grey),
+              const Spacer(),
+              IconButton(
+                onPressed:
+                    () => Navigator.pushNamed(
+                      context,
+                      AppRoutes.tradingChartScreen,
+                      arguments: coin.symbol,
                     ),
-                    const SizedBox(width: 8),
-                    AppText(
-                      content:
-                      "${double.parse(coin.priceChangePercent) > 0 ? "+" : ""}${double.parse(coin.priceChangePercent).toStringAsFixed(2)}%",
-                      style: AppTextStyle.text14Regular.copyWith(
-                          color: double.parse(coin.priceChangePercent) > 0
-                              ? AppColorsPath.green
-                              : AppColorsPath.red),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            IconButton(
-              onPressed: () => Navigator.pushNamed(
-                context,
-                AppRoutes.tradingChartScreen,
-                arguments: coin.symbol,
+                icon: const Icon(Icons.show_chart),
               ),
-              icon: const Icon(Icons.show_chart),
-            ),
-          ],
-        ),
-      );
-    });
+            ],
+          ),
+        );
+      },
+    );
   }
 
-  Widget _buildSpotTradingView() {
+  Padding _buildSpotTradingView() {
     return const Padding(
       padding: EdgeInsets.fromLTRB(16, 8, 16, 16),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            flex: 1,
-            child: OrderBookWidget(),
-          ),
+          Expanded(flex: 1, child: OrderBookWidget()),
           SizedBox(width: 12),
-          Expanded(
-            flex: 1,
-            child: BuySellWidget(),
-          ),
+          Expanded(flex: 1, child: BuySellWidget()),
         ],
       ),
     );
   }
 }
 
-class BuySellWidget extends StatelessWidget {
-  const BuySellWidget({
-    super.key,
-  });
+class ListCoinsBottomSheet extends StatelessWidget {
+  const ListCoinsBottomSheet({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<TradeProvider>(builder: (context, tradeProvider, child) {
-      return SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 32,
-              decoration: BoxDecoration(
-                color: AppColorsPath.grey.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(8),
+    final tradeProvider = context.watch<TradeProvider>();
+    return Consumer<HomeProvider>(
+      builder: (context, homeProvider, child) {
+        return ListView.separated(
+          padding: EdgeInsets.all(12),
+          itemBuilder: (context, index) {
+            final coin = homeProvider.listOfCoins[index];
+            return InkWell(
+              onTap: () {
+                if (coin.symbol.toLowerCase() != tradeProvider.currentSymbol) {
+                  tradeProvider.connectToOrderBookStream(coin.symbol);
+                }
+                Navigator.pop(context);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: EdgeInsets.all(12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    AppText(
+                      content: coin.symbolName,
+                      style: AppTextStyle.text14Regular,
+                    ),
+                    AppText(
+                      content: coin.price,
+                      style: AppTextStyle.text14Regular,
+                    ),
+                  ],
+                ),
               ),
-              child: Row(
-                children: [
-                  _buildBuySellButton("Buy", true, tradeProvider, context),
-                  _buildBuySellButton("Sell", false, tradeProvider, context),
-                ],
+            );
+          },
+          separatorBuilder: (context, index) => SizedBox(height: 10),
+          itemCount: homeProvider.listOfCoins.length,
+        );
+      },
+    );
+  }
+}
+
+class BuySellWidget extends StatelessWidget {
+  const BuySellWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<TradeProvider>(
+      builder: (context, tradeProvider, child) {
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 32,
+                decoration: BoxDecoration(
+                  color: AppColorsPath.grey.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    _buildBuySellButton("Buy", true, tradeProvider, context),
+                    _buildBuySellButton("Sell", false, tradeProvider, context),
+                  ],
+                ),
               ),
-            ),
 
-            const SizedBox(height: 16),
-            _buildDropdown("Limit", context),
-            const SizedBox(height: 12),
-            AppText(
-              content: "Available: 1000 USDT",
-              style: AppTextStyle.text14Regular
-                  .copyWith(color: AppColorsPath.grey),
-            ),
+              const SizedBox(height: 16),
+              _buildDropdown("Limit", context),
+              const SizedBox(height: 12),
+              AppText(
+                content: "Available: 1000 USDT",
+                style: AppTextStyle.text14Regular.copyWith(
+                  color: AppColorsPath.grey,
+                ),
+              ),
 
-            const SizedBox(height: 12),
-            _buildAmountInputWidget(
-                "Price", "USDT", tradeProvider.priceController, context),
-            const SizedBox(height: 8),
-            _buildAmountInputWidget(
-                "Amount", "BTC", tradeProvider.amountController, context),
-            const SizedBox(height: 16),
-            _buildSlider(tradeProvider),
-            const SizedBox(height: 8),
-            _buildTotalInput("0", context),
-            const SizedBox(height: 16),
-            AppButton(
-              title: "${tradeProvider.isBuy ? 'Buy' : 'Sell'} BTC",
-              buttonState: ButtonState.normal,
-              onTap: () {},
-            )
-          ],
-        ),
-      );
-    });
+              const SizedBox(height: 12),
+              _buildAmountInputWidget("Price", "USDT", context),
+              const SizedBox(height: 8),
+              _buildAmountInputWidget("Amount", "BTC", context),
+              const SizedBox(height: 16),
+              _buildSlider(tradeProvider),
+              const SizedBox(height: 8),
+              _buildTotalInput("0", context),
+              const SizedBox(height: 16),
+              AppButton(
+                title: "${tradeProvider.isBuy ? 'Buy' : 'Sell'} BTC",
+                buttonState: ButtonState.normal,
+                onTap: () {},
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
-  Widget _buildBuySellButton(String title, bool isBuyButton,
-      TradeProvider provider, BuildContext context) {
+  Expanded _buildBuySellButton(
+    String title,
+    bool isBuyButton,
+    TradeProvider provider,
+    BuildContext context,
+  ) {
     final isSelected = provider.isBuy == isBuyButton;
     return Expanded(
       child: GestureDetector(
         onTap: () => provider.toggleBuySell(isBuyButton),
         child: Container(
           decoration: BoxDecoration(
-            color: isSelected ? (isBuyButton ? AppColorsPath.green : AppColorsPath.red) : Colors.transparent,
+            color:
+                isSelected
+                    ? (isBuyButton ? AppColorsPath.green : AppColorsPath.red)
+                    : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Center(
@@ -307,17 +379,23 @@ class BuySellWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          AppText(content: value,
-              style: AppTextStyle.text14Regular
-                  .copyWith(color: context.titleSmallColor)),
+          AppText(
+            content: value,
+            style: AppTextStyle.text14Regular.copyWith(
+              color: context.titleSmallColor,
+            ),
+          ),
           Icon(Icons.keyboard_arrow_down, color: AppColorsPath.grey),
         ],
       ),
     );
   }
 
-  Widget _buildAmountInputWidget(String label, String suffix,
-      TextEditingController controller, BuildContext context) {
+  Container _buildAmountInputWidget(
+    String label,
+    String suffix,
+    BuildContext context,
+  ) {
     return Container(
       height: 48,
       decoration: BoxDecoration(
@@ -328,19 +406,22 @@ class BuySellWidget extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.remove, color: AppColorsPath.grey)),
+            onPressed: () {},
+            icon: Icon(Icons.remove, color: AppColorsPath.grey),
+          ),
           Expanded(
             child: TextField(
-              controller: controller,
+              controller: TextEditingController(),
               textAlign: TextAlign.center,
-              keyboardType:
-              const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: label,
-                hintStyle: AppTextStyle.text14Regular
-                    .copyWith(color: AppColorsPath.grey),
+                hintStyle: AppTextStyle.text14Regular.copyWith(
+                  color: AppColorsPath.grey,
+                ),
               ),
             ),
           ),
@@ -348,19 +429,21 @@ class BuySellWidget extends StatelessWidget {
             padding: const EdgeInsets.only(right: 8.0),
             child: AppText(
               content: suffix,
-              style: AppTextStyle.text14Regular
-                  .copyWith(color: context.titleSmallColor),
+              style: AppTextStyle.text14Regular.copyWith(
+                color: context.titleSmallColor,
+              ),
             ),
           ),
           IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.add, color: AppColorsPath.grey)),
+            onPressed: () {},
+            icon: Icon(Icons.add, color: AppColorsPath.grey),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildSlider(TradeProvider provider) {
+  Container _buildSlider(TradeProvider provider) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
@@ -379,24 +462,30 @@ class BuySellWidget extends StatelessWidget {
             inactiveColor: Colors.grey[200],
             onChanged: (value) => provider.setSliderValue(value),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: ["0%", "25%", "50%", "75%", "100%"]
-                  .map((label) => AppText(content: label,
-                  style: AppTextStyle.text14Regular
-                      .copyWith(color: AppColorsPath.grey)))
-                  .toList(),
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 10),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     children:
+          //         ["0%", "25%", "50%", "75%", "100%"]
+          //             .map(
+          //               (label) => AppText(
+          //                 content: label,
+          //                 style: AppTextStyle.text14Regular.copyWith(
+          //                   color: AppColorsPath.grey,
+          //                 ),
+          //               ),
+          //             )
+          //             .toList(),
+          //   ),
+          // ),
           const SizedBox(height: 8),
         ],
       ),
     );
   }
 
-  Widget _buildTotalInput(String value, BuildContext context) {
+  Container _buildTotalInput(String value, BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       decoration: BoxDecoration(
@@ -407,12 +496,18 @@ class BuySellWidget extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          AppText(content: "Total",
-              style:
-              AppTextStyle.text14Regular.copyWith(color: AppColorsPath.grey)),
-          AppText(content: "$value USDT",
-              style: AppTextStyle.text14Regular
-                  .copyWith(color: context.titleSmallColor)),
+          AppText(
+            content: "Total",
+            style: AppTextStyle.text14Regular.copyWith(
+              color: AppColorsPath.grey,
+            ),
+          ),
+          AppText(
+            content: "$value USDT",
+            style: AppTextStyle.text14Regular.copyWith(
+              color: context.titleSmallColor,
+            ),
+          ),
         ],
       ),
     );
