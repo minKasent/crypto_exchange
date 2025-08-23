@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:crypto_exchange/core/constants/app_data.dart';
 import 'package:crypto_exchange/models/order_book_model.dart';
 import 'package:crypto_exchange/repositories/orderbook_repository.dart';
@@ -5,6 +7,7 @@ import 'package:flutter/material.dart';
 
 class TradeProvider with ChangeNotifier {
   final OrderbookRepository orderbookRepository;
+  StreamSubscription<OrderBookModel>? _orderBookSubscription;
 
   TradeProvider(this.orderbookRepository) {
     init();
@@ -17,7 +20,6 @@ class TradeProvider with ChangeNotifier {
   List<OrderBookEntry> get asks => _asks;
 
   String currentSymbol = AppData.coins.first;
-
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
@@ -39,8 +41,9 @@ class TradeProvider with ChangeNotifier {
   }
 
   void connectToOrderBookStream(String symbol) {
-    _bids = [];
-    _asks = [];
+    _orderBookSubscription?.cancel();
+    _bids.clear();
+    _asks.clear();
     currentSymbol = symbol.toLowerCase();
 
     _setLoading(true);
@@ -49,12 +52,12 @@ class TradeProvider with ChangeNotifier {
     try {
       orderbookRepository.connectToOrderBook(symbol);
 
-      orderbookRepository.orderBookStream.listen(
-        (orderBookData) {
-          _bids = orderBookData.bids.take(10).toList();
-          _asks = orderBookData.asks.take(10).toList();
+      _orderBookSubscription = orderbookRepository.orderBookStream.listen(
+            (orderBookData) {
+          _bids = orderBookData.bids.take(15).toList();
+          _asks = orderBookData.asks.take(15).toList();
+          _setLoading(false);
           notifyListeners();
-          debugPrint('OrderBook data received for symbol: $symbol');
         },
         onError: (error) {
           _setError(error.toString());
@@ -67,36 +70,43 @@ class TradeProvider with ChangeNotifier {
     } catch (e) {
       _setError('Failed to connect to order book: $e');
       debugPrint('Failed to connect to order book: $e');
-    } finally {
-      _setLoading(false);
     }
   }
 
   void toggleBuySell(bool isBuy) {
-    _isBuy = isBuy;
-    notifyListeners();
+    if (_isBuy != isBuy) {
+      _isBuy = isBuy;
+      notifyListeners();
+    }
   }
 
   void setSliderValue(double value) {
-    _sliderValue = value;
-    notifyListeners();
+    if (_sliderValue != value) {
+      _sliderValue = value;
+      notifyListeners();
+    }
   }
 
   void _setLoading(bool loading) {
-    _isLoading = loading;
-    notifyListeners();
+    if (_isLoading != loading) {
+      _isLoading = loading;
+      notifyListeners();
+    }
   }
 
   void _setError(String? error) {
-    _error = error;
-    if (error != null) {
-      _setLoading(false);
+    if (_error != error) {
+      _error = error;
+      if (error != null) {
+        _setLoading(false);
+      }
+      notifyListeners();
     }
-    notifyListeners();
   }
 
   @override
   void dispose() {
+    _orderBookSubscription?.cancel();
     orderbookRepository.dispose();
     super.dispose();
   }

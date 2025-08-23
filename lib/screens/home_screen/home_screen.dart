@@ -24,10 +24,37 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // Bắt đầu lắng nghe dữ liệu coin khi màn hình được khởi tạo
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<HomeProvider>().init();
     });
+  }
+
+  String _getCoinIcon(String symbol) {
+    switch (symbol.toUpperCase()) {
+      case 'BTC':
+      case 'BTCUSDT':
+        return AppIconsPath.iconsBTC;
+      case 'ETH':
+      case 'ETHUSDT':
+        return AppIconsPath.iconsETH;
+      case 'SOL':
+      case 'SOLUSDT':
+        return AppIconsPath.iconsSLA;
+      default:
+        return AppIconsPath.iconsBTC; // fallback icon
+    }
+  }
+
+  String _formatVolume(String volume) {
+    final vol = double.tryParse(volume) ?? 0;
+    if (vol >= 1000000000) {
+      return "${(vol / 1000000000).toStringAsFixed(2)}B";
+    } else if (vol >= 1000000) {
+      return "${(vol / 1000000).toStringAsFixed(2)}M";
+    } else if (vol >= 1000) {
+      return "${(vol / 1000).toStringAsFixed(2)}K";
+    }
+    return vol.toStringAsFixed(2);
   }
 
   @override
@@ -111,40 +138,27 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(height: 16),
                       SizedBox(
                         height: (172 / 812) * context.screenHeight,
-                        child: ListView(
+                        child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           shrinkWrap: true,
-                          children: const [
-                            MarketMoverCard(
-                              iconPath: AppIconsPath.iconsBTC,
-                              symbol: "BTC/USD",
-                              price: "30,113.80",
-                              change: "+2.76%",
-                              isPositive: true,
-                              volume: "394 897 432,26",
-                              chartPath: true,
-                            ),
-                            SizedBox(width: 12),
-                            MarketMoverCard(
-                              iconPath: AppIconsPath.iconsSLA,
-                              symbol: "SOL/USD",
-                              price: "40,11",
-                              change: "+3.75%",
-                              isPositive: true,
-                              volume: "150 897 992,26",
-                              chartPath: false,
-                            ),
-                            SizedBox(width: 12),
-                            MarketMoverCard(
-                              iconPath: AppIconsPath.iconsETH,
-                              symbol: "ETH/USD",
-                              price: "1,890.45",
-                              change: "-1.25%",
-                              isPositive: false,
-                              volume: "280 123 456,78",
-                              chartPath: false,
-                            ),
-                          ],
+                          itemCount: homeProvider.listOfCoins.length, // Hiển thị tất cả coins
+                          itemBuilder: (context, index) {
+                            final coin = homeProvider.listOfCoins[index];
+                            final changePercent = double.tryParse(coin.priceChangePercent.replaceAll('%', '')) ?? 0;
+
+                            return Padding(
+                              padding: EdgeInsets.only(right: index < homeProvider.listOfCoins.length - 1 ? 12 : 0), // Padding cho tất cả items trừ item cuối
+                              child: MarketMoverCard(
+                                iconPath: _getCoinIcon(coin.symbol),
+                                symbol: coin.symbol,
+                                price: double.parse(coin.price).toStringAsFixed(2),
+                                change: "${changePercent >= 0 ? '+' : ''}${changePercent.toStringAsFixed(2)}%",
+                                isPositive: changePercent >= 0,
+                                volume: _formatVolume(coin.volume),
+                                chartPath: changePercent >= 0,
+                              ),
+                            );
+                          },
                         ),
                       ),
                       const SizedBox(height: 24),
@@ -163,12 +177,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemBuilder: (context, index) {
                             final item = homeProvider.listOfCoins[index];
                             return PortfolioCard(
-                              iconPath: AppIconsPath.iconsSLA,
+                              iconPath: _getCoinIcon(item.symbol),
                               name: item.symbolName,
-                              symbol: "BTC",
+                              symbol: item.symbol,
                               value: double.parse(item.price).toStringAsFixed(2),
                               change: item.priceChangePercent,
-                              isPositive: true,
+                              isPositive: !item.priceChangePercent.startsWith('-'),
                             );
                           },
                         ),
