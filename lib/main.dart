@@ -2,7 +2,7 @@
 import 'package:crypto_exchange/providers/home_provider.dart';
 import 'package:crypto_exchange/providers/theme_provider.dart';
 import 'package:crypto_exchange/providers/trade_provider.dart';
-import 'package:crypto_exchange/repositories/coin_respository.dart';
+import 'package:crypto_exchange/repositories/coin_repository.dart';
 import 'package:crypto_exchange/repositories/orderbook_repository.dart';
 import 'package:crypto_exchange/routes/app_routes.dart';
 import 'package:crypto_exchange/services/binance_websocket_service.dart';

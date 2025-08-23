@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:crypto_exchange/core/constants/app_data.dart';
 import 'package:crypto_exchange/models/coin.dart';
-import 'package:crypto_exchange/repositories/coin_respository.dart';
+import 'package:crypto_exchange/repositories/coin_repository.dart';
 import 'package:flutter/material.dart';
 
 class HomeProvider with ChangeNotifier {
