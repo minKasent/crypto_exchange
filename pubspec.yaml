@@ -50,6 +50,9 @@ dependencies:
   # Webview
   webview_flutter: ^4.10.0
 
+  # Flutter slidable
+  flutter_slidable: ^4.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

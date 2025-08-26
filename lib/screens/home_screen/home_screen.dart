@@ -5,6 +5,7 @@ import 'package:crypto_exchange/core/constants/app_icons_path.dart';
 import 'package:crypto_exchange/core/constants/app_images_path.dart';
 import 'package:crypto_exchange/core/extensions/context_extension.dart';
 import 'package:crypto_exchange/providers/home_provider.dart';
+import 'package:crypto_exchange/screens/favorite/favorite_screen.dart';
 import 'package:crypto_exchange/screens/home_screen/widgets/market_mover_card.dart';
 import 'package:crypto_exchange/screens/home_screen/widgets/portfolio_card.dart';
 import 'package:crypto_exchange/screens/trade_screen/trade_screen.dart';
@@ -112,21 +113,21 @@ class _HomeScreenState extends State<HomeScreen> {
                               content: "Portfolio Balance",
                               style: AppTextStyle.text16Medium.copyWith(
                                 color:
-                                context.theme.textTheme.titleSmall!.color,
+                                    context.theme.textTheme.titleSmall!.color,
                               ),
                             ),
                             AppText(
                               content: "\$2,760.23",
                               style: AppTextStyle.text32SemiBold.copyWith(
                                 color:
-                                context.theme.textTheme.titleSmall!.color,
+                                    context.theme.textTheme.titleSmall!.color,
                               ),
                             ),
                             AppText(
                               content: "+2.60%",
                               style: AppTextStyle.text16Medium.copyWith(
                                 color:
-                                context.theme.textTheme.titleSmall!.color,
+                                    context.theme.textTheme.titleSmall!.color,
                               ),
                             ),
                           ],
@@ -141,18 +142,33 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           shrinkWrap: true,
-                          itemCount: homeProvider.listOfCoins.length, // Hiển thị tất cả coins
+                          itemCount:
+                              homeProvider
+                                  .listOfCoins
+                                  .length, // Hiển thị tất cả coins
                           itemBuilder: (context, index) {
                             final coin = homeProvider.listOfCoins[index];
-                            final changePercent = double.tryParse(coin.priceChangePercent.replaceAll('%', '')) ?? 0;
+                            final changePercent =
+                                double.tryParse(
+                                  coin.priceChangePercent.replaceAll('%', ''),
+                                ) ??
+                                0;
 
                             return Padding(
-                              padding: EdgeInsets.only(right: index < homeProvider.listOfCoins.length - 1 ? 12 : 0), // Padding cho tất cả items trừ item cuối
+                              padding: EdgeInsets.only(
+                                right:
+                                    index < homeProvider.listOfCoins.length - 1
+                                        ? 12
+                                        : 0,
+                              ), // Padding cho tất cả items trừ item cuối
                               child: MarketMoverCard(
                                 iconPath: _getCoinIcon(coin.symbol),
                                 symbol: coin.symbol,
-                                price: double.parse(coin.price).toStringAsFixed(2),
-                                change: "${changePercent >= 0 ? '+' : ''}${changePercent.toStringAsFixed(2)}%",
+                                price: double.parse(
+                                  coin.price,
+                                ).toStringAsFixed(2),
+                                change:
+                                    "${changePercent >= 0 ? '+' : ''}${changePercent.toStringAsFixed(2)}%",
                                 isPositive: changePercent >= 0,
                                 volume: _formatVolume(coin.volume),
                                 chartPath: changePercent >= 0,
@@ -180,9 +196,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               iconPath: _getCoinIcon(item.symbol),
                               name: item.symbolName,
                               symbol: item.symbol,
-                              value: double.parse(item.price).toStringAsFixed(2),
+                              value: double.parse(
+                                item.price,
+                              ).toStringAsFixed(2),
                               change: item.priceChangePercent,
-                              isPositive: !item.priceChangePercent.startsWith('-'),
+                              isPositive:
+                                  !item.priceChangePercent.startsWith('-'),
                             );
                           },
                         ),
@@ -199,7 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case 2:
         return const Center(child: Text("Market"));
       case 3:
-        return const Center(child: Text("Favorites"));
+        return const FavoriteScreen();
       case 4:
         return const Center(child: Text("Wallet"));
       default:
@@ -226,7 +245,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const AssetImage(AppIconsPath.iconsHome),
             color: context.theme.iconTheme.color,
           ),
-          activeIcon:  ImageIcon(
+          activeIcon: ImageIcon(
             AssetImage(AppIconsPath.iconsHome),
             color: AppColorsPath.blue,
           ),
@@ -237,7 +256,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const AssetImage(AppIconsPath.iconsTrade),
             color: context.theme.iconTheme.color,
           ),
-          activeIcon:  ImageIcon(
+          activeIcon: ImageIcon(
             AssetImage(AppIconsPath.iconsTrade),
             color: AppColorsPath.blue,
           ),
@@ -248,7 +267,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const AssetImage(AppIconsPath.iconsMarket),
             color: context.theme.iconTheme.color,
           ),
-          activeIcon:  ImageIcon(
+          activeIcon: ImageIcon(
             AssetImage(AppIconsPath.iconsMarket),
             color: AppColorsPath.blue,
           ),
@@ -259,7 +278,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const AssetImage(AppIconsPath.iconsFavorites),
             color: context.theme.iconTheme.color,
           ),
-          activeIcon:  ImageIcon(
+          activeIcon: ImageIcon(
             AssetImage(AppIconsPath.iconsFavorites),
             color: AppColorsPath.blue,
           ),
@@ -270,7 +289,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const AssetImage(AppIconsPath.iconsWallet),
             color: context.theme.iconTheme.color,
           ),
-          activeIcon:  ImageIcon(
+          activeIcon: ImageIcon(
             AssetImage(AppIconsPath.iconsWallet),
             color: AppColorsPath.blue,
           ),

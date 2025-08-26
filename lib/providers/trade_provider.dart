@@ -2,14 +2,16 @@ import 'dart:async';
 
 import 'package:crypto_exchange/core/constants/app_data.dart';
 import 'package:crypto_exchange/models/order_book_model.dart';
+import 'package:crypto_exchange/repositories/favorite_repository.dart';
 import 'package:crypto_exchange/repositories/orderbook_repository.dart';
 import 'package:flutter/material.dart';
 
 class TradeProvider with ChangeNotifier {
   final OrderbookRepository orderbookRepository;
   StreamSubscription<OrderBookModel>? _orderBookSubscription;
+  final FavoriteRepository favoriteRepository;
 
-  TradeProvider(this.orderbookRepository) {
+  TradeProvider(this.orderbookRepository, this.favoriteRepository) {
     init();
   }
 
@@ -32,6 +34,9 @@ class TradeProvider with ChangeNotifier {
   double _sliderValue = 0;
   double get sliderValue => _sliderValue;
 
+  bool get isFavorite =>
+      favoriteRepository.getFavoriteTokens().contains(currentSymbol);
+
   void init() {
     try {
       connectToOrderBookStream(currentSymbol);
@@ -53,7 +58,7 @@ class TradeProvider with ChangeNotifier {
       orderbookRepository.connectToOrderBook(symbol);
 
       _orderBookSubscription = orderbookRepository.orderBookStream.listen(
-            (orderBookData) {
+        (orderBookData) {
           _bids = orderBookData.bids.take(15).toList();
           _asks = orderBookData.asks.take(15).toList();
           _setLoading(false);

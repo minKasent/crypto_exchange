@@ -72,11 +72,12 @@ class _TradeScreenState extends State<TradeScreen>
                 ),
                 indicatorSize: TabBarIndicatorSize.tab,
                 onTap: (index) => setState(() {}),
-                tabs: ["Spot", "Margin", "Grid", "Fiat"]
-                    .asMap()
-                    .entries
-                    .map((entry) => _buildTab(entry.value, entry.key))
-                    .toList(),
+                tabs:
+                    ["Spot", "Margin", "Grid", "Fiat"]
+                        .asMap()
+                        .entries
+                        .map((entry) => _buildTab(entry.value, entry.key))
+                        .toList(),
               ),
             ),
           ),
@@ -103,9 +104,10 @@ class _TradeScreenState extends State<TradeScreen>
         child: AppText(
           content: title,
           style: AppTextStyle.text14Regular.copyWith(
-            color: _tabController.index == index
-                ? Colors.black
-                : AppColorsPath.grey,
+            color:
+                _tabController.index == index
+                    ? Colors.black
+                    : AppColorsPath.grey,
           ),
         ),
       ),
@@ -121,12 +123,15 @@ class _TradeScreenState extends State<TradeScreen>
             child: Center(child: AppText(content: "Waiting for coin data...")),
           );
         }
-        Coin coin = homeProvider.listOfCoins
-            .where((e) =>
-        e.symbol.toLowerCase() ==
-            context.read<TradeProvider>().currentSymbol)
-            .toList()
-            .first;
+        Coin coin =
+            homeProvider.listOfCoins
+                .where(
+                  (e) =>
+                      e.symbol.toLowerCase() ==
+                      context.read<TradeProvider>().currentSymbol,
+                )
+                .toList()
+                .first;
 
         final isPositive = double.parse(coin.priceChangePercent) > 0;
 
@@ -172,7 +177,10 @@ class _TradeScreenState extends State<TradeScreen>
                       AppText(
                         content: double.parse(coin.price).toStringAsFixed(2),
                         style: AppTextStyle.text16Medium.copyWith(
-                          color: isPositive ? AppColorsPath.green : AppColorsPath.red,
+                          color:
+                              isPositive
+                                  ? AppColorsPath.green
+                                  : AppColorsPath.red,
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
@@ -182,7 +190,7 @@ class _TradeScreenState extends State<TradeScreen>
                         padding: const EdgeInsets.only(bottom: 2.0),
                         child: AppText(
                           content:
-                          "≈\$${double.parse(coin.price).toStringAsFixed(2)}",
+                              "≈\$${double.parse(coin.price).toStringAsFixed(2)}",
                           style: AppTextStyle.text14Regular.copyWith(
                             color: Colors.grey,
                           ),
@@ -193,9 +201,12 @@ class _TradeScreenState extends State<TradeScreen>
                         padding: const EdgeInsets.only(bottom: 2.0),
                         child: AppText(
                           content:
-                          "${isPositive ? "+" : ""}${double.parse(coin.priceChangePercent).toStringAsFixed(2)}%",
+                              "${isPositive ? "+" : ""}${double.parse(coin.priceChangePercent).toStringAsFixed(2)}%",
                           style: AppTextStyle.text14Regular.copyWith(
-                            color: isPositive ? AppColorsPath.green : AppColorsPath.red,
+                            color:
+                                isPositive
+                                    ? AppColorsPath.green
+                                    : AppColorsPath.red,
                           ),
                         ),
                       ),
@@ -205,11 +216,12 @@ class _TradeScreenState extends State<TradeScreen>
               ),
               const Spacer(),
               IconButton(
-                onPressed: () => Navigator.pushNamed(
-                  context,
-                  AppRoutes.tradingChartScreen,
-                  arguments: coin.symbol,
-                ),
+                onPressed:
+                    () => Navigator.pushNamed(
+                      context,
+                      AppRoutes.tradingChartScreen,
+                      arguments: coin.symbol,
+                    ),
                 icon: const Icon(Icons.show_chart),
               ),
             ],
@@ -314,8 +326,11 @@ class ListCoinsBottomSheet extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   itemBuilder: (context, index) {
                     final coin = homeProvider.listOfCoins[index];
-                    final isSelected = coin.symbol.toLowerCase() == tradeProvider.currentSymbol;
-                    final isPositive = double.parse(coin.priceChangePercent) > 0;
+                    final isSelected =
+                        coin.symbol.toLowerCase() ==
+                        tradeProvider.currentSymbol;
+                    final isPositive =
+                        double.parse(coin.priceChangePercent) > 0;
 
                     return InkWell(
                       onTap: () {
@@ -326,11 +341,22 @@ class ListCoinsBottomSheet extends StatelessWidget {
                       },
                       child: Container(
                         decoration: BoxDecoration(
-                          color: isSelected ? Colors.blue.withOpacity(0.1) : Colors.transparent,
+                          color:
+                              isSelected
+                                  ? Colors.blue.withOpacity(0.1)
+                                  : Colors.transparent,
                           borderRadius: BorderRadius.circular(8),
-                          border: isSelected ? Border.all(color: Colors.blue.withOpacity(0.3)) : null,
+                          border:
+                              isSelected
+                                  ? Border.all(
+                                    color: Colors.blue.withOpacity(0.3),
+                                  )
+                                  : null,
                         ),
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 16,
+                        ),
                         child: Row(
                           children: [
                             // Coin info
@@ -342,7 +368,10 @@ class ListCoinsBottomSheet extends StatelessWidget {
                                     content: coin.symbolName,
                                     style: AppTextStyle.text16Medium.copyWith(
                                       fontWeight: FontWeight.w600,
-                                      color: isSelected ? Colors.blue : Colors.black,
+                                      color:
+                                          isSelected
+                                              ? Colors.blue
+                                              : Colors.black,
                                     ),
                                   ),
                                   const SizedBox(height: 2),
@@ -361,7 +390,8 @@ class ListCoinsBottomSheet extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 AppText(
-                                  content: "\$${double.parse(coin.price).toStringAsFixed(2)}",
+                                  content:
+                                      "\$${double.parse(coin.price).toStringAsFixed(2)}",
                                   style: AppTextStyle.text14Regular.copyWith(
                                     fontWeight: FontWeight.w600,
                                     color: Colors.black,
@@ -369,15 +399,25 @@ class ListCoinsBottomSheet extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 2),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 6,
+                                    vertical: 2,
+                                  ),
                                   decoration: BoxDecoration(
-                                    color: (isPositive ? AppColorsPath.green : AppColorsPath.red).withOpacity(0.1),
+                                    color: (isPositive
+                                            ? AppColorsPath.green
+                                            : AppColorsPath.red)
+                                        .withOpacity(0.1),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: AppText(
-                                    content: "${isPositive ? "+" : ""}${double.parse(coin.priceChangePercent).toStringAsFixed(2)}%",
+                                    content:
+                                        "${isPositive ? "+" : ""}${double.parse(coin.priceChangePercent).toStringAsFixed(2)}%",
                                     style: AppTextStyle.text14Regular.copyWith(
-                                      color: isPositive ? AppColorsPath.green : AppColorsPath.red,
+                                      color:
+                                          isPositive
+                                              ? AppColorsPath.green
+                                              : AppColorsPath.red,
                                       fontSize: 12,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -398,7 +438,8 @@ class ListCoinsBottomSheet extends StatelessWidget {
                       ),
                     );
                   },
-                  separatorBuilder: (context, index) => const SizedBox(height: 4),
+                  separatorBuilder:
+                      (context, index) => const SizedBox(height: 4),
                   itemCount: homeProvider.listOfCoins.length,
                 );
               },
@@ -409,7 +450,6 @@ class ListCoinsBottomSheet extends StatelessWidget {
     );
   }
 }
-
 
 class BuySellWidget extends StatefulWidget {
   const BuySellWidget({super.key});
@@ -520,7 +560,10 @@ class _BuySellWidgetState extends State<BuySellWidget> {
   }
 
   Widget _buildAmountInputWidget(
-      String label, String suffix, TextEditingController controller) {
+    String label,
+    String suffix,
+    TextEditingController controller,
+  ) {
     return Container(
       height: 48,
       padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -534,21 +577,23 @@ class _BuySellWidgetState extends State<BuySellWidget> {
             child: TextField(
               controller: controller,
               textAlign: TextAlign.start,
-              keyboardType:
-              const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: '— $label',
-                hintStyle: AppTextStyle.text14Regular
-                    .copyWith(color: AppColorsPath.grey),
+                hintStyle: AppTextStyle.text14Regular.copyWith(
+                  color: AppColorsPath.grey,
+                ),
               ),
             ),
           ),
           AppText(
             content: '$suffix +',
             style: AppTextStyle.text14Regular.copyWith(
-                color: Colors.black,
-                fontWeight: FontWeight.w500
+              color: Colors.black,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ],
@@ -561,8 +606,10 @@ class _BuySellWidgetState extends State<BuySellWidget> {
       children: [
         AppText(
           content: "${provider.sliderValue.round()}%",
-          style: AppTextStyle.text14Regular
-              .copyWith(fontSize: 12, color: AppColorsPath.grey),
+          style: AppTextStyle.text14Regular.copyWith(
+            fontSize: 12,
+            color: AppColorsPath.grey,
+          ),
         ),
         const SizedBox(width: 8),
         Expanded(
@@ -588,8 +635,7 @@ class _BuySellWidgetState extends State<BuySellWidget> {
     );
   }
 
-  void _handleOrderSubmit() {
-  }
+  void _handleOrderSubmit() {}
 
   Widget _buildDropdown(String value, BuildContext context) {
     return Container(
@@ -623,7 +669,9 @@ class _BuySellWidgetState extends State<BuySellWidget> {
         children: [
           AppText(
             content: value,
-            style: AppTextStyle.text14Regular.copyWith(color: AppColorsPath.grey),
+            style: AppTextStyle.text14Regular.copyWith(
+              color: AppColorsPath.grey,
+            ),
           ),
           AppText(
             content: "USDT",

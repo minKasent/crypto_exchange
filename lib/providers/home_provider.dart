@@ -13,7 +13,7 @@ class HomeProvider with ChangeNotifier {
   final CoinRepository _coinRespository;
 
   bool _isLoading = false;
-  bool get isLoaded => _isLoading;
+  bool get isLoading => _isLoading;
 
   String? _error;
   String? get error => _error;

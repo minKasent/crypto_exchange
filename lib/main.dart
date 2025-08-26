@@ -1,8 +1,10 @@
 // lib/main.dart
+import 'package:crypto_exchange/providers/favorite_provider.dart';
 import 'package:crypto_exchange/providers/home_provider.dart';
 import 'package:crypto_exchange/providers/theme_provider.dart';
 import 'package:crypto_exchange/providers/trade_provider.dart';
 import 'package:crypto_exchange/repositories/coin_repository.dart';
+import 'package:crypto_exchange/repositories/favorite_repository.dart';
 import 'package:crypto_exchange/repositories/orderbook_repository.dart';
 import 'package:crypto_exchange/routes/app_routes.dart';
 import 'package:crypto_exchange/services/binance_websocket_service.dart';
@@ -40,9 +42,22 @@ class CryptoExchange extends StatelessWidget {
               (context) =>
                   OrderbookRepository(context.read<BinanceWebsocketService>()),
         ),
+        Provider(
+          create: (context) => FavoriteRepository(StorageService.instance),
+        ),
         ChangeNotifierProvider(
           create:
-              (context) => TradeProvider(context.read<OrderbookRepository>()),
+              (context) => TradeProvider(
+                context.read<OrderbookRepository>(),
+                context.read<FavoriteRepository>(),
+              ),
+        ),
+        ChangeNotifierProvider(
+          create:
+              (context) => FavoriteProvider(
+                context.read<CoinRepository>(),
+                context.read<FavoriteRepository>(),
+              ),
         ),
       ],
       child: MyApp(onboardingCompleted: onboardingCompleted),
