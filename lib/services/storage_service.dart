@@ -1,4 +1,6 @@
 // lib/services/storage_service.dart
+import 'dart:async';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StorageService {
@@ -12,6 +14,15 @@ class StorageService {
   static const String onboardingKey =
       "onboarding_completed_key"; // key onboarding completed
   static const String themeKey = "theme_key"; // key theme
+  static const String favoriteSymbolsKey = 'favorite_symbol_key';
+
+  // Stream controller for favorite symbol changes
+  final StreamController<List<String>> _favoriteChangeController =
+      StreamController<List<String>>.broadcast();
+
+  // Stream that emits whenever favorite tokens change
+  Stream<List<String>> get favoriteChangeStream =>
+      _favoriteChangeController.stream;
 
   late SharedPreferences _sharedPreferences;
 
@@ -51,5 +62,44 @@ class StorageService {
     return getBoolValue(
       onboardingKey,
     ); // APP -> getOnboardingCompleted() -> getBoolvalue
+  }
+
+  /// get favorite tokens list by lowercase
+  /// Example if storage is [BTCUSDT, ETHUSDT] -> [btcusdt, ethusdt]
+  List<String> getFavoriteTokens() {
+    List<String> listOfFavoriteTokens =
+        _sharedPreferences.getStringList(favoriteSymbolsKey) ?? [];
+
+    /// To lowercase for every item in the list
+    for (var i = 0; i < listOfFavoriteTokens.length; i++) {
+      listOfFavoriteTokens[i] = listOfFavoriteTokens[i].toLowerCase();
+    }
+
+    return listOfFavoriteTokens;
+  }
+
+  /// Toggle favorite token
+  /// Check if token is exist -> remove it from favorite list
+  /// otherwise -> add it to favorite list
+  Future<void> toggleFavoriteToken(String tokenSymbol) async {
+    final String normalizedTokenSymbol = tokenSymbol.toLowerCase();
+
+    List<String> currentFavoriteTokens = getFavoriteTokens();
+
+    if (currentFavoriteTokens.contains(normalizedTokenSymbol)) {
+      /// delete if token is existed in the favorite list
+      currentFavoriteTokens.remove(normalizedTokenSymbol);
+    } else {
+      currentFavoriteTokens.insert(0, normalizedTokenSymbol);
+    }
+
+    /// save the new favorite list
+    await _sharedPreferences.setStringList(
+      favoriteSymbolsKey,
+      currentFavoriteTokens,
+    );
+
+    /// emit the new favorite list
+    _favoriteChangeController.add(currentFavoriteTokens);
   }
 }

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:crypto_exchange/core/constants/app_data.dart';
 import 'package:crypto_exchange/models/coin.dart';
-import 'package:crypto_exchange/repositories/coin_respository.dart';
+import 'package:crypto_exchange/repositories/coin_repository.dart';
 import 'package:flutter/material.dart';
 
 class HomeProvider with ChangeNotifier {
@@ -13,7 +13,7 @@ class HomeProvider with ChangeNotifier {
   final CoinRepository _coinRespository;
 
   bool _isLoading = false;
-  bool get isLoaded => _isLoading;
+  bool get isLoading => _isLoading;
 
   String? _error;
   String? get error => _error;
@@ -26,10 +26,13 @@ class HomeProvider with ChangeNotifier {
     try {
       _setLoading(true);
 
-      await _coinRespository.init(coins: AppData.coins); // khởi tạo kết nối với repository
+      await _coinRespository.init(
+        coins: AppData.coins,
+      ); // khởi tạo kết nối với repository
 
       /// listen to stream data
-      _coinRespository.coinStream.listen( //  lắng nghe stream từ repository
+      _coinRespository.coinStream.listen(
+        //  lắng nghe stream từ repository
         // khi có dữ liệu mới từ stream thì sẽ nhận được message
         (message) {
           _listOfCoins = message.values.toList(); // chuyển đổi map sang list
@@ -49,16 +52,20 @@ class HomeProvider with ChangeNotifier {
     }
   }
 
-  void _setLoading(bool loading) {// loading là trạng thái mới
-    if (loading != _isLoading) { // nếu loading khác với trạng thái hiện tại
+  void _setLoading(bool loading) {
+    // loading là trạng thái mới
+    if (loading != _isLoading) {
+      // nếu loading khác với trạng thái hiện tại
       _isLoading = loading; // cập nhật trạng thái loading
-      notifyListeners();// thông báo cho các widget lắng nghe rằng trạng thái đã thay đổi
+      notifyListeners(); // thông báo cho các widget lắng nghe rằng trạng thái đã thay đổi
       // chỉ khi nào loading khác với trạng thái hiện tại thì mới cập nhật
     }
   }
 
-  void _setError(String? error) {// error là thông báo lỗi mới
-    if (error != _error) { // nếu error khác với thông báo lỗi hiện tại
+  void _setError(String? error) {
+    // error là thông báo lỗi mới
+    if (error != _error) {
+      // nếu error khác với thông báo lỗi hiện tại
       _error = error; // cập nhật thông báo lỗi
       notifyListeners();
     }

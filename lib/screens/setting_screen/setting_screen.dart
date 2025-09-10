@@ -1,4 +1,5 @@
 import 'package:crypto_exchange/components/app_button.dart';
+import 'package:crypto_exchange/core/constants/app_colors_path.dart';
 import 'package:crypto_exchange/core/constants/app_icons_path.dart';
 import 'package:crypto_exchange/core/enum/enum.dart';
 import 'package:crypto_exchange/core/extensions/context_extension.dart';
@@ -108,7 +109,7 @@ class SettingScreen extends StatelessWidget {
               AppButton(
                 title: "Log Out",
                 buttonState: ButtonState.second,
-                onTap: () {},
+                onTap: () {}, backgroundColor: AppColorsPath.lightWhite,
               ),
               SizedBox(height: 50),
             ],

@@ -8,6 +8,7 @@ class AppTheme {
     scaffoldBackgroundColor: AppColorsPath.black,
     appBarTheme: AppBarTheme(backgroundColor: AppColorsPath.black),
     cardColor: AppColorsPath.darkSurface,
+    fontFamily: 'Readex Pro',
     textTheme: TextTheme(
       titleMedium: AppTextStyle.text16Medium.copyWith(
         color: AppColorsPath.brightGreen,
@@ -18,17 +19,22 @@ class AppTheme {
       titleLarge: AppTextStyle.text32SemiBold.copyWith(
         color: AppColorsPath.lightBlack,
       ),
-      bodyMedium: AppTextStyle.text14Regular.copyWith(color: AppColorsPath.black)
+      bodyMedium: AppTextStyle.text14Regular.copyWith(
+        color: AppColorsPath.white,
+      ),
+      bodyLarge: AppTextStyle.text16Medium.copyWith(
+        color: AppColorsPath.white,
+        fontSize: 18,
+      ),
     ),
-    iconTheme: IconThemeData(
-      color: AppColorsPath.lightBlack
-    ),
+    iconTheme: IconThemeData(color: AppColorsPath.lightBlack),
     dividerColor: Colors.transparent,
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
-      backgroundColor: AppColorsPath.darkSurface
+      backgroundColor: AppColorsPath.darkSurface,
     ),
     brightness: Brightness.dark,
     primaryColor: AppColorsPath.white,
+    colorScheme: ColorScheme.dark(),
     typography: Typography(
       white: TextTheme(
         titleMedium: AppTextStyle.text16Medium.copyWith(
@@ -61,8 +67,13 @@ class AppTheme {
       titleLarge: AppTextStyle.text32SemiBold.copyWith(
         color: AppColorsPath.black,
       ),
+      bodyLarge: AppTextStyle.text16Medium.copyWith(
+        color: AppColorsPath.black,
+        fontSize: 18,
+      ),
     ),
-    dividerColor:  Colors.grey.shade200,
+    dividerColor: Colors.grey.shade200,
+    colorScheme: ColorScheme.light(),
     typography: Typography(
       white: TextTheme(
         titleMedium: AppTextStyle.text16Medium.copyWith(

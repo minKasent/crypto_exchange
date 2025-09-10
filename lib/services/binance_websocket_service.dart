@@ -1,91 +1,106 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:crypto_exchange/models/coin.dart';
-import 'package:flutter/widgets.dart';
+import 'package:crypto_exchange/models/order_book_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class BinanceWebsocketService {
   BinanceWebsocketService();
 
-  /// Tickers
-  // Stream format: {coin}@ticker
-  // Example for 4 coins: wss://stream.binance.com:9443/stream?streams=btcusdt@ticker/ethusdt@ticker/bnbusdt@ticker/solusdt@ticker
-
-  static const String _baseTickerUrl =
-      'wss://stream.binance.com:9443/stream?streams=';
+  static const String _baseTickerUrl = 'wss://stream.binance.com:9443/stream?streams=';
+  static const String _baseOrderBookUrl = 'wss://stream.binance.com:9443/ws/';
 
   WebSocketChannel? _tickerChannel;
+  WebSocketChannel? _orderBookChannel;
 
-  /// broadcast stream controller to allow multiple listeners
-  final StreamController<Map<String, Coin>> _coinStreamController =
-      StreamController<Map<String, Coin>>.broadcast();
+  final StreamController<Map<String, Coin>> _coinStreamController = StreamController<Map<String, Coin>>.broadcast();
+  StreamController<OrderBookModel>? _orderBookStreamController;
 
-  /// expose the stream to listen for coin updates
   Stream<Map<String, Coin>> get coinStream => _coinStreamController.stream;
+  Stream<OrderBookModel> get orderBookStream => _orderBookStreamController?.stream ?? const Stream.empty();
 
-  /// Map of coin data
   final Map<String, Coin> _coinData = {};
+  Map<String, Coin> get currentCoins => _coinData;
 
-  /// Getter for coin data
-  Map<String, Coin> get currentCoins => _coinData; // response coin hiện tại từ websocket
-
-  /// Connect to binance websocket and listen for symbol coin updates
   Future<void> connectToTickers({required List<String> coins}) async {
     try {
-      /// Create stream parameter for all coins
-      final streams = coins
-          .map((coin) => '${coin.toLowerCase()}@ticker')
-          .join('/');
+      await _tickerChannel?.sink.close();
 
-      /// create url
+      final streams = coins.map((coin) => '${coin.toLowerCase()}@ticker').join('/');
       final url = _baseTickerUrl + streams;
-
-      /// Create websocket channel
       _tickerChannel = WebSocketChannel.connect(Uri.parse(url));
 
-      /// Listen to websocket channel
-      if (_tickerChannel == null) return;
       _tickerChannel!.stream.listen(
-        (message) {
-          // listen to data from websocket
-          final data = jsonDecode(message); // decode string to json
-          if (data['data'] != null) {
-            final coin = Coin.fromJson(
-              data['data'],
-            ); // convert json to Coin model
-            /// Add new data to stream
-            _coinData[coin.symbol] = coin; // add coin vào danh sách coin hiện tại
-            _coinStreamController.add(_coinData);// add coin vào stream
-            debugPrint("Updated coin data for ${coin.symbol}: $coin}");
+            (message) {
+          try {
+            final data = jsonDecode(message);
+            if (data['data'] != null) {
+              final coin = Coin.fromJson(data['data']);
+              _coinData[coin.symbol] = coin;
+              if (!_coinStreamController.isClosed) {
+                _coinStreamController.add(Map.from(_coinData));
+              }
+            }
+          } catch (e) {
+            debugPrint("Error parsing ticker data: $e");
           }
         },
-        onError: (error) async {
-          debugPrint("Error In connecting to websocket coin data: $error");
-
-          /// Attempt to reconnect after a delay
-          // await Future.delayed(
-          //   Duration(seconds: 3),
-          // ); // wait for 3 seconds reconnect
-          // connectToTickers(); // reconnect to websocket
-        },
-        onDone: () {
-          debugPrint("Connection to websocket closed");
-        },
+        onError: (error) => debugPrint("Ticker websocket error: $error"),
+        onDone: () => debugPrint("Ticker websocket closed"),
       );
     } catch (e) {
-      debugPrint("Failed to connect to websocket: $e");
-      throw Exception("Failed to connect to websocket: $e");
+      debugPrint("Error connecting to ticker websocket: $e");
     }
+  }
+
+  void connectToOrderBook({required String symbol}) {
+    disposeOrderBook();
+
+    try {
+      final url = '$_baseOrderBookUrl${symbol.toLowerCase()}@depth';
+      _orderBookChannel = WebSocketChannel.connect(Uri.parse(url));
+      _orderBookStreamController = StreamController<OrderBookModel>.broadcast();
+
+      _orderBookChannel!.stream.listen(
+            (message) {
+          try {
+            final data = jsonDecode(message);
+            final orderBook = OrderBookModel.fromJson(data);
+            if (!_orderBookStreamController!.isClosed) {
+              _orderBookStreamController!.add(orderBook);
+            }
+          } catch (e) {
+            debugPrint("Error parsing orderbook data: $e");
+            if (!_orderBookStreamController!.isClosed) {
+              _orderBookStreamController!.addError(e);
+            }
+          }
+        },
+        onError: (error) {
+          debugPrint("OrderBook websocket error: $error");
+          if (!_orderBookStreamController!.isClosed) {
+            _orderBookStreamController!.addError(error);
+          }
+        },
+        onDone: () => debugPrint("OrderBook websocket closed"),
+      );
+    } catch (e) {
+      debugPrint("Error connecting to orderbook: $e");
+      _orderBookStreamController?.addError(e);
+    }
+  }
+
+  void disposeOrderBook() {
+    _orderBookChannel?.sink.close();
+    _orderBookChannel = null;
+    _orderBookStreamController?.close();
+    _orderBookStreamController = null;
   }
 
   void dispose() {
-    // close the stream controller and websocket channel
     _coinStreamController.close();
-    if (_tickerChannel != null) {
-      _tickerChannel!.sink.close();
-    }
+    disposeOrderBook();
+    _tickerChannel?.sink.close();
   }
-
-  /// Orderbook
 }

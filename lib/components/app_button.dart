@@ -20,7 +20,7 @@ class AppButton extends StatelessWidget {
     this.onTap,
     this.buttonState = ButtonState.normal,
     this.width = double.infinity,
-    super.key,
+    super.key, required Color backgroundColor,
   });
 
   @override

@@ -10,4 +10,13 @@ extension ContextExtension on BuildContext {
 
   /// get theme
   ThemeData get theme => Theme.of(this);
+
+  /// text theme
+  TextTheme get textTheme => theme.textTheme;
+
+  /// text style
+  TextStyle? get titleSmall => textTheme.titleMedium;
+
+  /// title small color
+  Color? get titleSmallColor => titleSmall!.color;
 }
